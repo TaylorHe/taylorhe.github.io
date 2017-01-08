@@ -159,7 +159,7 @@ padding: 5px;
 
 }
 .carousel-indicators {
-  top: 300px;
+  bottom: -75px;
 }
 .slide-custom {
     height:300px;
@@ -193,7 +193,7 @@ background-attachment: fixed;
 background-size: cover;
 width: 100%;
 display: block;
-min-height: 450px;
+min-height: 500px;
     color:#fff;
 }
 
