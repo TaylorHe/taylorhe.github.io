@@ -1,4 +1,4 @@
-﻿
+
 /*=============================================================
     Authour URI: www.binarytheme.com
     License: Commons Attribution 3.0
@@ -201,7 +201,7 @@ padding: 15px;
 #testimonial { 
   
     
-background: url(../img/home.jpg) no-repeat 50% 50%;
+background: url(../img/wood.jpg) no-repeat 50% 50%;
 background-attachment: fixed;
 -webkit-background-size: cover;
 -moz-background-size: cover;
@@ -262,8 +262,13 @@ small {
 /*=======================================
     Contact STYLES
 ==================================================*/
+
+#contact{
+text-align: center;
+}
 .qry {
     background-color: #F3F3F3;
+  max-height: 200px;
 }
 .cnt {
 width: 100%;
