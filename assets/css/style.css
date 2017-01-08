@@ -160,6 +160,8 @@ padding: 5px;
 }
 .carousel-indicators {
   bottom: -75px;
+  display:block;
+  
 }
 .slide-custom {
     height:300px;
