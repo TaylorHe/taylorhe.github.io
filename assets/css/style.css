@@ -136,23 +136,6 @@ height: auto;
     padding:5px;
 }
 
-/*=======================================
-    SKILL BAR STYLES
-==================================================*/
-
-
-.progress-adjust {
-    height: 10px;
-     margin-bottom: 0px; 
-}
-.skill-div {
-    margin-top:10px; 
-}
-
-.progress {
-    min-height:40px;
-}
-
 /* ===========================================================
     INTRO /ABOUT 
    ============================================================*/
@@ -172,8 +155,11 @@ padding: 5px;
 ==================================================*/
 
 #carousel-example {
-    margin:20px;
+    margin:10px;
 
+}
+.carousel-indicators {
+  top: 300px;
 }
 .slide-custom {
     height:300px;
@@ -185,13 +171,12 @@ padding: 5px;
 border: 2px solid #000;
 overflow: hidden;
 border-radius: 50%;
-  display:flex;
-/*display: inline-block;*/
+display: inline-block;
 }
 
 .img-u {
-   max-height: 90px;
-max-width: 90px;
+  max-height: 90px;
+  max-width: 90px;
 }
 
 .c-set {
@@ -208,7 +193,7 @@ background-attachment: fixed;
 background-size: cover;
 width: 100%;
 display: block;
-height: 500px;
+min-height: 450px;
     color:#fff;
 }
 
