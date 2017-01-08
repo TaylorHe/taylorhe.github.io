@@ -176,7 +176,8 @@ padding: 5px;
 
 }
 .slide-custom {
-    min-height:200px;
+    min-height:250px;
+    max-height: 250px;
     padding:20px;
     line-height:30px;
 }
