@@ -176,8 +176,8 @@ padding: 5px;
 
 }
 .slide-custom {
-    min-height:250px;
-    max-height: 250px;
+    min-height:200px;
+    max-height: 
     padding:20px;
     line-height:30px;
 }
@@ -200,8 +200,6 @@ font-size: 20px;
 padding: 15px;
 }
 #testimonial { 
-  
-    
 background: url(../img/wood.jpg) no-repeat 50% 50%;
 background-attachment: fixed;
 -webkit-background-size: cover;
@@ -210,8 +208,7 @@ background-attachment: fixed;
 background-size: cover;
 width: 100%;
 display: block;
-height: auto;
-   min-height:200px;
+height: 300px;
     color:#fff;
 }
 /* ===========================================================
