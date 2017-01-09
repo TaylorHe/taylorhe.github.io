@@ -101,6 +101,11 @@ border-color: #000;
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
 color: #000;
 }
+
+.navbar-inverse .navbar-nav > li > a:hover{
+  color: #fff;
+  background-image: url("../img/wood.jpg");
+}
 .navbar-toggle {
     background-color: black;
 }
@@ -114,7 +119,7 @@ color: #000;
 #home-sec { 
   
     
-background: url(../img/home.jpg) no-repeat 50% 50%;
+background: url(../img/wood.jpg) no-repeat 50% 50%;
 background-attachment: fixed;
 -webkit-background-size: cover;
 -moz-background-size: cover;
@@ -137,7 +142,7 @@ height: auto;
 }
 
 .head-last {
-     margin-top:70px;
+    margin-top:70px;
     font-size:25px ;
     font-weight:900;
     padding:5px 20px 20px 20px;
