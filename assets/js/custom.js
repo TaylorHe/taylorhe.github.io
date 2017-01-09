@@ -20,7 +20,7 @@
             /*====================================
               CUSTOM LINKS SCROLLING FUNCTION 
              ======================================*/
-
+          
             $('.navbar a[href*=#]').click(function () {
                 if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
                && location.hostname == this.hostname) {
@@ -32,10 +32,10 @@
                         $('html,body')
                         .animate({ scrollTop: targetOffset }, 800); //set scroll speed here
                         return false;
-                    }
+                    }å
                 }
             });
-
+          
        
             // CAROUSEL FUNCTION 
 
@@ -48,7 +48,9 @@
                WRITE YOUR SCRIPTS BELOW 
            ======================================*/
 
-
+            $('.navbar-collapse a').click(function(){
+            $(".navbar-collapse").collapse('hide');
+          });
         },
 
         initialization: function () {
