@@ -149,10 +149,37 @@ height: auto;
     padding:5px;
 }
 
+.panel-wood1{
+background-image: url(../img/wood1.jpg);
+}
+.panel-wood2{
+background-image: url(../img/wood2.jpg);
+}
+.panel-wood3{
+background-image: url(../img/wood3.jpg);
+}
+.panel-wood4{
+background-image: url(../img/wood4.jpg);
+}
+
+.panel-white{
+background-color: #fff;
+  border-right: thin solid #3d3d3d;
+  border-left: thin solid #3d3d3d;
+  border-bottom: thin solid #3d3d3d;
+}
+
+.fa-cog {
+  color: white;
+}
+.twhite{
+color: #fff;
+}
 /* ===========================================================
     INTRO /ABOUT 
    ============================================================*/
 .panel-title-adjust{
+  color: white;
 font-size: 20px;
 padding: 5px;
 }
