@@ -59,6 +59,14 @@ section {
 	font-size: 18px;
 }
 
+.navselfie{
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  
+}
 .navbar-inverse {
 background: #fff;
 min-height: 60px;
@@ -73,7 +81,7 @@ padding-top: 5px;
 .navbar-inverse .navbar-brand {
 	color: #000;
 	font-weight: bolder;
-	font-size: 30px;
+	font-size: 25px;
     font-weight:900;
 	letter-spacing: 2px;
 }
@@ -150,12 +158,18 @@ padding: 5px;
 .panel-title-adjust i {
         padding-right:5px;
     }
+
+.selfie{
+  margin-left: 16%;
+  height: 70%;
+  width: 70%;
+}
 /*=======================================
     TESTIMONIAL STYLES
 ==================================================*/
 
 #carousel-example {
-    margin:20px;
+    margin:10px;
 
 }
 .carousel-indicators {
@@ -164,9 +178,10 @@ padding: 5px;
   
 }
 .slide-custom {
-    height:300px;
-    padding:20px;
-    line-height:30px;
+  align-content: center;
+    height: 300px;
+    padding:2 0px;
+    line-height: 30px;
 }
 
 .user-img {
@@ -184,7 +199,7 @@ display: inline-block;
 .c-set {
     font-style: italic;
 font-size: 20px;
-padding: 15px;
+padding: 10px;
 }
 #testimonial { 
 background: url(../img/wood.jpg) no-repeat 50% 50%;
@@ -263,11 +278,8 @@ border-top: 1px solid #d6d6d6;
     width: 9.6rem;
   }
   .soc svg {
-     position: relative;
-    height: 96px;
-    height: 9.6rem;
-    width: 96px;
-    width: 9.6rem;
+    height: 100%;
+    width: 100%;
   }
   .soc em {
     font-size: 14px;

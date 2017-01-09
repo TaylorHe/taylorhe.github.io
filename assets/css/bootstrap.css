@@ -5432,7 +5432,7 @@ button.close {
 .carousel-inner > .active,
 .carousel-inner > .next,
 .carousel-inner > .prev {
-  display: block;
+  display:block;
 }
 .carousel-inner > .active {
   left: 0;
@@ -5577,8 +5577,8 @@ button.close {
     font-size: 30px;
   }
   .carousel-caption {
-    right: 20%;
-    left: 20%;
+    right: 10%;
+    left: 10%;
     padding-bottom: 30px;
   }
   .carousel-indicators {
