@@ -61,10 +61,10 @@ section {
 
 .navselfie{
   margin-top: 10px;
+  margin-left: 10px;
   width: 30px;
   height: 30px;
   margin-right: 10px;
-  vertical-align:bottom;
   
 }
 .navbar-inverse {
@@ -169,7 +169,7 @@ padding: 5px;
 ==================================================*/
 
 #carousel-example {
-    margin:20px;
+    margin:10px;
 
 }
 .carousel-indicators {
@@ -179,10 +179,9 @@ padding: 5px;
 }
 .slide-custom {
   align-content: center;
-    height:300px;
-    width: 520px;
-    padding:20px;
-    line-height:30px;
+    height: 300px;
+    padding:2 0px;
+    line-height: 30px;
 }
 
 .user-img {
@@ -200,7 +199,7 @@ display: inline-block;
 .c-set {
     font-style: italic;
 font-size: 20px;
-padding: 15px;
+padding: 10px;
 }
 #testimonial { 
 background: url(../img/wood.jpg) no-repeat 50% 50%;
