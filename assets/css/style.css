@@ -59,6 +59,14 @@ section {
 	font-size: 18px;
 }
 
+.navselfie{
+  margin-top: 10px;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  vertical-align:bottom;
+  
+}
 .navbar-inverse {
 background: #fff;
 min-height: 60px;
@@ -150,6 +158,12 @@ padding: 5px;
 .panel-title-adjust i {
         padding-right:5px;
     }
+
+.selfie{
+  margin-left: 16%;
+  height: 70%;
+  width: 70%;
+}
 /*=======================================
     TESTIMONIAL STYLES
 ==================================================*/
@@ -164,7 +178,9 @@ padding: 5px;
   
 }
 .slide-custom {
+  align-content: center;
     height:300px;
+    width: 520px;
     padding:20px;
     line-height:30px;
 }
