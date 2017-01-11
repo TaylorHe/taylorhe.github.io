@@ -52,6 +52,21 @@ section {
 .form-control {
         background-color: rgba(255, 255, 255, 0);
 }
+
+
+.random-quote{
+  color: #bbb;
+  font-style: italic;
+  font-size: 14pt;
+  text-align: center;
+}
+.random-quote-author{
+  color: #999;
+  font-style: italic;
+  font-size: 16pt;
+  text-align: center;
+}
+
 /* ===========================================================
    NAVBAR CHANGES   
    ============================================================*/
@@ -175,19 +190,24 @@ background-color: #fff;
 color: #fff;
 }
 
+.skills-title{
+  text-align: left;
+  margin-top: -15px;
+}
+
 
 #resumeProficiencies {
 	float:none;
 	clear:right;
-	width: 450px;
-	margin: 00px 0px 30px 30px;
+	width: 85%;
+	margin: 0px 0px 30px 30px;
 }
 
 #resumeProficienciesTop {
 	float: left;
 	clear: right;
-	width: 100%;
-	margin-left: 8%;
+	width: 83%;
+	margin-left: 6%;
 	text-align: left;
 	font-weight: 600;
 }
@@ -195,8 +215,8 @@ color: #fff;
 #resumeProficienciesBottom {
 	float: left;
 	clear:none;
-  margin-left: 8%;
-	width: 80%;
+  margin-left: 6%;
+	width: 82.5%;
 }
 
 .progress {
@@ -241,7 +261,7 @@ padding: 5px;
     }
 
 .selfie{
-  margin-left: 16%;
+  margin-left: 15%;
   height: 70%;
   width: 70%;
 }
@@ -311,6 +331,10 @@ width: 100%;
 display: block;
 min-height: 500px;
     color:#fff;
+}
+
+.right.carousel-control, .left.carousel-control {
+    display:block;
 }
 
 /*=======================================
