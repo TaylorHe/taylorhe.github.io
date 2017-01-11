@@ -146,7 +146,7 @@ width: 100%;
 display: block;
 height: auto;
  padding-top:190px;
-   height:500px;
+   min-height:500px;
     color:#fff;
 }
 
