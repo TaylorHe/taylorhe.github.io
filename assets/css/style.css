@@ -15,10 +15,13 @@
     GENERAL STYLES
 ==================================================*/
 
+
+html{
+overflow-x: hidden;
+}
+
 body {
     font-size:14px;
-   
-   
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -76,15 +79,6 @@ section {
    ============================================================*/
 .navbar {
 	font-size: 18px;
-}
-
-.navselfie{
-  margin-top: 10px;
-  margin-left: 10px;
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-  
 }
 .navbar-inverse {
 background: #fff;
@@ -181,7 +175,7 @@ background-image: url(../img/wood4.jpg);
 }
 
 .panel-white{
-background-color: #fff;
+  background-color: #fff;
   border-right: thin solid #3d3d3d;
   border-left: thin solid #3d3d3d;
   border-bottom: thin solid #3d3d3d;
