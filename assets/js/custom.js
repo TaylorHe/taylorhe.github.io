@@ -51,6 +51,20 @@
             $('.navbar-collapse a').click(function(){
               $(".navbar-collapse").collapse('hide');
             });
+          
+          
+          $(document).ready(function() {
+            $('.cpp').css('width', '85%');
+            $('.java').css('width', '80%');
+            $('.python').css('width', '70%');
+            $('.scheme').css('width', '65%');
+            $('.html').css('width', '60%');
+            $('.css').css('width', '50%');
+            $('.javascript').css('width', '50%');
+            $('.matlab').css('width', '40%');
+          });
+          
+          
         },
 
         initialization: function () {
