@@ -67,6 +67,10 @@ section {
   text-align: center;
 }
 
+.container-one{
+  margin-top: -30px;
+
+}
 /* ===========================================================
    NAVBAR CHANGES   
    ============================================================*/
@@ -142,16 +146,16 @@ width: 100%;
 display: block;
 height: auto;
  padding-top:190px;
-   min-height:500px;
+   height:500px;
     color:#fff;
 }
 
 .head-main {
-    font-size:80px ;
+    font-size:80px;
     font-weight:900;
     padding:15px;
     text-transform:uppercase;
-    
+    margin-top: -25px;
 }
 
 .head-last {
@@ -160,6 +164,7 @@ height: auto;
     font-weight:900;
     padding:5px 20px 20px 20px;
     padding:5px;
+  margin-bottom: 25px;
 }
 
 .panel-wood1{
