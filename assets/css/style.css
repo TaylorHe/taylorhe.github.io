@@ -243,7 +243,7 @@ color: #fff;
 	box-shadow: 0 1px 0px #bbbbbb inset, 0 1px 0 #fcfcfc;	  
 }
 
-.cpp, .java, .python, .scheme, .html, .css, .javascript, .matlab {
+.cpp, .java, .python, .scheme, .html, .css, .javascript, .matlab, .bad-humor {
 
  -webkit-transition: width 2.00s ease !important;
  -moz-transition: width 2.0s ease !important;

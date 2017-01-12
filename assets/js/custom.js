@@ -60,6 +60,7 @@
             $('.scheme').css('width', '65%');
             $('.html').css('width', '60%');
             $('.css').css('width', '50%');
+            $('.bad-humor').css('width', '100%');
           });
           
           
