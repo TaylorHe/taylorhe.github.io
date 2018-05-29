@@ -54,9 +54,9 @@
     <div id="home-sec" style="overflow-x: hidden;">   
     <div class="container-one" >
         <div class="row text-center">
-            <div  class="col-md-12" >
-                <span class="head-main" >Hey, I'm Taylor</span>
-                <h3 class="head-last col-md-8 col-md-offset-2  col-sm-8 col-sm-offset-2"> Computer Science Student & Software Developer</h3>
+            <div class="col-md-12" >
+                <span class="head-main" >Kelly Sucks</span>
+                <h3 class="head-last col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2"> MIT is really lowering their standards</h3>
                 
                  
             </div>
@@ -64,28 +64,58 @@
     </div>
    
     </div>
-     <!--END HOME SECTION-->  
+     <!--END HOME SECTION--> 
+     <div class="container" style="padding-top: 50px;">
 
+            <a class="col-md-6" id="demo"> <img src="assets/img/hat.jpg" style="width: 500px; height: 500px;" /> </a>
+            <div class="col-md-6" >
+            <p style="font-size: 30pt;">Kelly Visual Presentation</p>
+            <p style="font-size: 20pt;">Click on the sorting hat to find out what House you are sorted into!</p>
+
+            <div id="option" style="font-size: 55pt;"> </div>
+            <div style="padding-top: 45%;"> </div>
+            <button id="spinit"> Spin it! </button>
+            <button id="stopit"> Stop Spinning </button>
+            </div>
+
+
+      <script>
+      document.getElementById("demo").onclick = function() {myFunction()};
+      document.getElementById("spinit").onclick = function() {
+        spin(document.getElementById("option"), true)}
+      document.getElementById("stopit").onclick = function() {spin(document.getElementById("option"), false)}
+            isSpinning = false;
+      options = ["Slytherin", "Gryffindor", "Hufflepuff", "Ravenclaw",
+              // "The Yellow One", "The Green One", "The Blue One", "The Red One",
+              "No House For You, Filthy Muggle!"
+              ];
+      function myFunction() {
+        document.getElementById("demo").style.transform += "scaleX(-1)";
+        j = Math.floor(Math.random() * 10) % options.length;
+        
+        opt = document.getElementById("option");
+        opt.innerHTML = options[j];
+
+      }
+      function spin(object, toSpin) {
+        isSpinning = toSpin;
+        if(isSpinning) {
+          document.getElementById("spinit").innerHTML = "Spin Faster!"
+        } else {
+          document.getElementById("stopit").innerHTML = "CAN'T STOP WON'T STOP SPINNING"
+        }
+        setInterval(function()
+        {
+            object.style.transform += "rotate(5deg)";
+        }, 15);
+      }
+
+      </script>
+
+              <hr>
+            </div>
     <section id="about" >
         <div class="container">
-        	<center><p>Kelly Visual Presentation</p>
-        		<p id="option" style="font-size: 55pt;"> </p>
-              <a id="demo"> <img src="assets/img/hat.jpg" /> </a>
-
-
-			<script>
-			document.getElementById("demo").onclick = function() {myFunction()};
-
-			function myFunction() {
-				j = Math.floor(Math.random() * 10) % 8;
-				options = ["Slytherin", "Griffindor", "Hufflepuff", "Ravenclaw",
-							"The Yellow One", "The Green One", "The Blue One", "The Red One"
-							];
-			    document.getElementById("option").innerHTML = options[j];
-			}
-			</script>
-              </center>
-              <hr>
             <div class="row g-pad-bottom ">
 
                  <div class="col-md-6">
@@ -94,7 +124,7 @@
                 <center><h1>Taylor He</h1></center>
                      <center><h4>Software Developer</h4></center>
                      <p>
-                       &nbsp;&nbsp;&nbsp;&nbsp;I'm a computer science junior studying at Stevens Institute of Technology. I'm seeking challenging and rewarding internships in the field of software development to improve my skills and gain more experience in the industry. 
+                       &nbsp;&nbsp;&nbsp;&nbsp;I'm a computer science senior studying at Stevens Institute of Technology. Learn more about me in this webpage 
                                 </p>
                        <center><a href="assets/taylorhe_resume.pdf" target="_blank" class="btn btn-primary btn-lg">DOWNLOAD MY RESUME</a></center>
                   <hr>
@@ -295,12 +325,13 @@
             <div class="col-md-6">
             <div class="alert work-info text-center">
                           <h4> Broadway Technology</h4> 
-                  <i> June 2017 - Aug 2017 </i>
+                  <i> June 2017 - Present </i>
                           <hr>
                           <p style="text-align:left">
-                            &nbsp;&nbsp;&nbsp;&nbsp;I was primarily responsible for a project that was essentially an email monitoring service. I enhanced an existing service that monitored emails from an inbox and parsed those to the database schema. I added support for many new features including email threads, monitoring multiple instances of the class and therefore multiple mailboxes on the same service, and general bug fixes. The email list I was responsible for monitoring was called integration, and the purpose of this mailing list is similar to emailing support for questions regarding live systems. Support emails are monitored and saved, but a blind spot existed in basically all other communications with exchanges, banks, and other counterparties. There exists a wealth of knowledge in email communications, so we want to store it in a searchable archive to prevent redundant questions, coordinate communications, and act as a general knowledge base... and what better searchable archive than the TOC? ;) <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;In addition, I was assigned to import recruiting data from the iCIMS API to the TOC, Broadway's proprietary database, with an aggressive focus on data quality, accuracy, and correction. Data quality was important because management needed to use the recruiting data to make important decisions. 
-                           In addition to correcting the data, I created customizable graphs and charts on Monarch, Broadway's web platform, to better visualize the recruiting pipeline.
+                            &nbsp;&nbsp;&nbsp;&nbsp;I was primarily responsible for a project that was essentially an email monitoring service. I enhanced an existing service that monitored emails from an inbox and parsed those to the database schema. Along with general bug fixes, I added support for many new features including email threads, monitoring multiple instances of the class and therefore multiple mailboxes on the same service. The email list I was responsible for monitoring was called integration, and the purpose of this mailing list is similar to emailing support for questions regarding live systems. Support emails are monitored and saved, but a blind spot existed in basically all other communications with exchanges, banks, and other counterparties. There exists a wealth of knowledge in email communications, so we want to store it in a searchable archive to prevent redundant questions, coordinate communications, and act as a general knowledge base... and what better searchable archive than the TOC? ;) <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;In addition, I was assigned to import recruiting data from the iCIMS API to the TOC, Broadway's proprietary database, with an aggressive focus on data quality, accuracy, and correction. Data quality was important because management needed to use the recruiting data to make important decisions. <br>
+                    During the school year, I extended CRUD features to an existing Gantt chart application. It gave me exposure to React, Node, and web development in general.
+                           
                     
                         </div>
                         </p>
