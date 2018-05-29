@@ -68,8 +68,26 @@
 
     <section id="about" >
         <div class="container">
+        	<center><p>Kelly Visual Presentation</p>
+        		<p id="option" style="font-size: 55pt;"> </p>
+              <a id="demo"> <img src="assets/img/hat.jpg" /> </a>
+
+
+			<script>
+			document.getElementById("demo").onclick = function() {myFunction()};
+
+			function myFunction() {
+				j = Math.floor(Math.random() * 10) % 8;
+				options = ["Slytherin", "Griffindor", "Hufflepuff", "Ravenclaw",
+							"The Yellow One", "The Green One", "The Blue One", "The Red One"
+							];
+			    document.getElementById("option").innerHTML = options[j];
+			}
+			</script>
+              </center>
+              <hr>
             <div class="row g-pad-bottom ">
-              <center><p>***This site is currently being re-written in React. Information may be outdated***</p></center>
+
                  <div class="col-md-6">
                    <img src="assets/img/me2.jpg" class="selfie">
 
