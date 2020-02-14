@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>1: Perfect Forwarding | Programbling</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="1: Perfect Forwarding" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="In over-simplified terms, perfect forwarding is a function that forwards its parameters to another function without losing the parameter’s qualifiers. It moves the parameters from one function to another, as if the first function does not exist. This is used in templated functions to preserve move semantics, avoid unnecessary copies, and avoid having to write multiple overloaded functions. It becomes more clear in an example." />
+<meta property="og:description" content="In over-simplified terms, perfect forwarding is a function that forwards its parameters to another function without losing the parameter’s qualifiers. It moves the parameters from one function to another, as if the first function does not exist. This is used in templated functions to preserve move semantics, avoid unnecessary copies, and avoid having to write multiple overloaded functions. It becomes more clear in an example." />
+<link rel="canonical" href="http://localhost:4000/2019/12/21/perfect-forwarding.html" />
+<meta property="og:url" content="http://localhost:4000/2019/12/21/perfect-forwarding.html" />
+<meta property="og:site_name" content="Programbling" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-12-21T03:00:00-05:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","headline":"1: Perfect Forwarding","dateModified":"2019-12-21T03:00:00-05:00","datePublished":"2019-12-21T03:00:00-05:00","url":"http://localhost:4000/2019/12/21/perfect-forwarding.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/12/21/perfect-forwarding.html"},"description":"In over-simplified terms, perfect forwarding is a function that forwards its parameters to another function without losing the parameter’s qualifiers. It moves the parameters from one function to another, as if the first function does not exist. This is used in templated functions to preserve move semantics, avoid unnecessary copies, and avoid having to write multiple overloaded functions. It becomes more clear in an example.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Programbling" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Programbling</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">1: Perfect Forwarding</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-12-21T03:00:00-05:00" itemprop="datePublished">Dec 21, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>In over-simplified terms, perfect forwarding is a function that forwards its parameters to another function without losing the parameter’s qualifiers. It moves the parameters from one function to another, as if the first function does not exist. This is used in templated functions to preserve move semantics, avoid unnecessary copies, and avoid having to write multiple overloaded functions. It becomes more clear in an example.</p>
+
+<p>Take a templated function insert, which is a wrapper around the emplace function of an <code class="highlighter-rouge">std::unordered_map</code> called <code class="highlighter-rouge">myMap</code>:</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">myMap</span><span class="p">;</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">K</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">insert</span><span class="p">(</span><span class="n">K</span><span class="o">&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="n">V</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">myMap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fries</span> <span class="o">=</span> <span class="s">"french fries"</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">numFries</span> <span class="o">=</span> <span class="mi">300</span><span class="p">;</span>
+    <span class="n">insert</span><span class="p">(</span><span class="n">fries</span><span class="p">,</span> <span class="n">numFries</span><span class="p">);</span>  <span class="c1">// Success :)</span>
+    <span class="n">insert</span><span class="p">(</span><span class="s">"hamburgers"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>  <span class="c1">// Fail :(</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The function insert works when you pass in lvalues, but fails when you pass rvalues. A workaround could be writing another function with rvalue references:</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">K</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">insert</span><span class="p">(</span><span class="n">K</span><span class="o">&amp;&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="n">V</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">myMap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">insert</span><span class="p">(</span><span class="s">"hamburgers"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>  <span class="c1">// Success :)</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>But now there are two functions that effectively do the same thing. You’ll also need to write two more after that in case the key is an rvalue and the value is an lvalue, and vice versa. Perfect forwarding has the solution to this madness.</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">K</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">insert</span><span class="p">(</span><span class="n">K</span><span class="o">&amp;&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="n">V</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">myMap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">K</span><span class="o">&gt;</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span><span class="p">(</span><span class="n">value</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fries</span> <span class="o">=</span> <span class="s">"french fries"</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">drink</span> <span class="o">=</span> <span class="s">"pepsi"</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">one</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">three</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="n">insert</span><span class="p">(</span><span class="n">pepsi</span><span class="p">,</span> <span class="n">one</span><span class="p">);</span>               <span class="c1">// Success :)</span>
+    <span class="n">insert</span><span class="p">(</span><span class="n">fries</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">three</span><span class="p">));</span>  <span class="c1">// Success :)</span>
+    <span class="n">insert</span><span class="p">(</span><span class="s">"pizza"</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>               <span class="c1">// Success :)   </span>
+<span class="p">}</span></code></pre></figure>
+
+<p>There are two things to break down here: the concept of a universal reference and the std::forward function. The term universal reference was coined by Scott Meyers in his article, and it describes the concept of taking an rvalue reference to a cv-unqualified template parameter, which can then be deduced as either an l- or r-value reference. It’s also known as a forwarding reference, which is its official name. Universal references are only defined when there’s a cv-unqualified type, &amp;&amp;, and type deduction takes place.* (see 12/30 edit below for example). In the second and third code snippet, a casual reading of the code would lead the one to think that they are rvalue references, but since the type is deduced by the template and there is a &amp;&amp;, it’s actually a universal reference. In practice, we almost never use universal references except in the context of templated functions.</p>
+
+<p>To understand why universal references work the way they do, it’s important to understand reference collapsing. When you are passing in a reference into the perfectly forwarded function, the call looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">K</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+<span class="kt">void</span> <span class="nf">insert</span><span class="p">(</span><span class="n">K</span><span class="o">&amp;&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="n">V</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">myMap</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">K</span><span class="o">&gt;</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span><span class="p">(</span><span class="n">value</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">foo</span> <span class="o">=</span> <span class="s">"foo"</span><span class="p">;</span>
+    <span class="n">insert</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>The call is instantiated with types:</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="o">&amp;&amp;</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;&amp;</span> <span class="o">&amp;&amp;</span><span class="p">);</span></code></pre></figure>
+
+<p>Wait, a reference to a reference? That’s not right…
+The <code class="highlighter-rouge">&amp; &amp;&amp;</code> is technically invalid.
+The source code however, makes perfect sense.
+To account for this, C++11 and above use a reference collapsing technique when 
+ref to ref comes up in template instantiation. The collapsing rules are as follows:</p>
+
+<ul>
+  <li>&amp; and &amp; collapse to &amp;</li>
+  <li>&amp; and &amp;&amp; collapse to &amp;</li>
+  <li>&amp;&amp; and &amp; collapse to &amp;</li>
+  <li>&amp;&amp; and &amp;&amp; collapse to &amp;&amp;  =&gt; only rvalue</li>
+</ul>
+
+<p>Therefore, C++ deduces the call to type</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;&amp;</span><span class="p">)</span></code></pre></figure>
+
+<p>I can’t explain it any more clearly than Scott Meyers does: Reference collapsing is the mechanism that leads to universal references (which are really just rvalue references in situations where reference-collapsing takes place) sometimes resolving to lvalue references and sometimes to rvalue references.</p>
+
+<p>The final question is what does std::forward do? According to the C++ Reference, it returns “an rvalue reference to the argument if it is not an lvalue reference. If the argument is an lvalue reference, the function returns the argument without modifying its type.” Basically, it’s a helper function to allow perfect forwarding of arguments taken as rvalue references to deduced types, preserving any potential move semantics involved.</p>
+
+<p>Amazing, right? Using all of universal references, reference collapsing, and std::forward, we can effectively write a single, powerful wrapper function that allows for both l- and r-value references, preserve move semantics and therefore avoid unnecessary copying. What would make this even more cool is to apply variadic templating to accept arbitrary number of arguments on top of perfect forwarding. However, like my evil college textbook, that will be an exercise left to the reader.</p>
+
+<p>I know this isn’t a comprehensive post yet, but I’ll be adding more to it when I get the time. For now, I think it’s a good introduction to the perfect forwarding problem and solution.</p>
+
+<p>EDIT 12/30:</p>
+
+<p>When using universal references in classes, this code is incorrect.</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="cp">#include &lt;unordered_map&gt;
+</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">K</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">Cache</span>
+<span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="kt">bool</span> <span class="n">add</span><span class="p">(</span><span class="n">K</span><span class="o">&amp;&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="n">V</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">);</span>
+  <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">map</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">K</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">Cache</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">&gt;::</span><span class="n">add</span><span class="p">(</span><span class="n">K</span><span class="o">&amp;&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="n">V</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">map</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">K</span><span class="o">&gt;</span><span class="p">(</span><span class="n">key</span><span class="p">),</span>
+                       <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">V</span><span class="o">&gt;</span><span class="p">(</span><span class="n">value</span><span class="p">)).</span><span class="n">second</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Cache</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">cache</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">food</span> <span class="o">=</span> <span class="s">"jello"</span><span class="p">;</span>
+    <span class="n">cache</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"item"</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="c1">// cache.add(food, 2);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>On first glance, it looks right, right? This actually compiles, and it works! Well, except for the commented <code class="highlighter-rouge">add(lvalue, rvalue)</code> call, so I guess it doesn’t work.</p>
+
+<p>We’ve failed to recognize the difference between universal references and r-value references. Once we declare the Cache object, in this case with <code class="highlighter-rouge">Cache&lt;std::string, int&gt;</code>, the <code class="highlighter-rouge">K</code> and <code class="highlighter-rouge">V</code> types are already known to the compiler.</p>
+
+<p>Let’s go back to our definition of a forwarding/universal reference. Universal references are only defined when there’s a cv-unqualified type, &amp;&amp;, and type deduction takes place. In this case, there’s no longer any type deduction because we’ve already told the compiler the types <code class="highlighter-rouge">K</code> and <code class="highlighter-rouge">V</code>. This means that the <code class="highlighter-rouge">K&amp;&amp;</code> and <code class="highlighter-rouge">V&amp;&amp;</code> are r-value references!</p>
+
+<p>In order to perfectly forward, we need to introduce another template. The below code correctly implements perfect forwarding of the <code class="highlighter-rouge">add()</code> function.</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="cp">#include &lt;unordered_map&gt;
+</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">K</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">Cache</span>
+<span class="p">{</span>
+  <span class="nl">public:</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="n">KEYTYPE</span><span class="p">,</span> <span class="n">VALUETYPE</span><span class="o">&gt;</span>
+    <span class="kt">bool</span> <span class="n">add</span><span class="p">(</span><span class="n">KEYTYPE</span><span class="o">&amp;&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="n">VALUETYPE</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">);</span>
+  <span class="nl">private:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">&gt;</span> <span class="n">map</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">K</span><span class="p">,</span> <span class="k">typename</span> <span class="n">V</span><span class="o">&gt;</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">KEYTYPE</span><span class="p">,</span> <span class="k">typename</span> <span class="n">VALUETYPE</span><span class="o">&gt;</span>
+<span class="kt">bool</span> <span class="n">Cache</span><span class="o">&lt;</span><span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="o">&gt;::</span><span class="n">add</span><span class="p">(</span><span class="n">KEYTYPE</span><span class="o">&amp;&amp;</span> <span class="n">key</span><span class="p">,</span> <span class="n">VALUETYPE</span><span class="o">&amp;&amp;</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">map</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">KEYTYPE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">key</span><span class="p">),</span>
+                       <span class="n">std</span><span class="o">::</span><span class="n">forward</span><span class="o">&lt;</span><span class="n">VALUETYPE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">value</span><span class="p">)).</span><span class="n">second</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Cache</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">cache</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">one</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">cache</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"item"</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">cache</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s">"jello"</span><span class="p">,</span> <span class="n">one</span><span class="p">);</span>  <span class="c1">// Success</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>In this new version, the compiler does not know <code class="highlighter-rouge">KEYTYPE</code> or <code class="highlighter-rouge">VALUETYPE</code>, and therefore must employ type deduction, making this double reference a universal reference, thereby enabling perfect forwarding.</p>
+
+  </div><a class="u-url" href="/2019/12/21/perfect-forwarding.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Programbling</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Programbling</li><li><a class="u-email" href="mailto:taylor.he7@gmail.com">taylor.he7@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/taylorhe"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">taylorhe</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>I ramble about programming and other topics.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
