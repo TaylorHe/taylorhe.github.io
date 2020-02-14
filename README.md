@@ -1,8 +1,7 @@
 # taylorhe.github.io
 
-A very heavily modified template.
+Used to be a personal website, now it's my personal programming-related blog.
 
 # todo:
-- add a blog
 - update about me descriptions
-- make it less monotonous
+- stuff like that

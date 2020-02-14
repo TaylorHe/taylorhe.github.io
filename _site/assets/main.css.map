@@ -3,10 +3,10 @@
 	"file": "main.css",
 	"sources": [
 		"main.scss",
-		"../../../../../../../home/taylorhe/gems/gems/minima-2.5.1/_sass/minima.scss",
-		"../../../../../../../home/taylorhe/gems/gems/minima-2.5.1/_sass/minima/_base.scss",
-		"../../../../../../../home/taylorhe/gems/gems/minima-2.5.1/_sass/minima/_layout.scss",
-		"../../../../../../../home/taylorhe/gems/gems/minima-2.5.1/_sass/minima/_syntax-highlighting.scss"
+		"../../../../../../home/taylorhe/gems/gems/minima-2.5.1/_sass/minima.scss",
+		"../../../../../../home/taylorhe/gems/gems/minima-2.5.1/_sass/minima/_base.scss",
+		"../../../../../../home/taylorhe/gems/gems/minima-2.5.1/_sass/minima/_layout.scss",
+		"../../../../../../home/taylorhe/gems/gems/minima-2.5.1/_sass/minima/_syntax-highlighting.scss"
 	],
 	"sourcesContent": [
 		"@import \"minima\";\n",

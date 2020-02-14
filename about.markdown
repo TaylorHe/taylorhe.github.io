@@ -4,15 +4,13 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+Welcome to Programbling, where I ramble about computer science topics, and probably other non-related topics like finance or anything interesting I come across, really.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+I've never written a blog post before, so I guess I'll start off by introducing myself.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+My name is Taylor, and I solve problems through code. I constantly try to challenge myself, and I never settle for anything less than 70%. My highest endorsed skill on LinkedIn is "Memes" by far, and I would like to keep it that way.
 
+The blogs posts will written with no audience in mind, so topics might be all over the place. If you want to talk more about anything I write about, feel free to shoot me an email.
 
-[jekyll-organization]: https://github.com/jekyll
+Welcome again, and I hope you find my future posts useful!
+
