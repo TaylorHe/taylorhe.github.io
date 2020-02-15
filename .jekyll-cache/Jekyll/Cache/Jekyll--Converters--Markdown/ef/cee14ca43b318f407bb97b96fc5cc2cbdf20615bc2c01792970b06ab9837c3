@@ -1,0 +1,130 @@
+I""<p>I haven’t used unions in C++ because they’re just not intuitive enough to me. They’re horrendous to write and a pain to maintain. Let’s go over what they are.</p>
+
+<p>A union is a special class type that can only hold one of its members at a time. It’s similar to a struct declaration. Take the following sample code from <a href="https://en.cppreference.com/w/cpp/language/union">cppreference</a>. I’ve added some of my thoughts.</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="k">union</span> <span class="n">S</span> <span class="p">{</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">;</span>
+   <span class="o">~</span><span class="n">S</span><span class="p">()</span> <span class="p">{}</span> <span class="c1">// needs to know which member is active, only possible in union-like class
+</span>
+<span class="p">};</span>  <span class="c1">// the whole union occupies max(sizeof(string), sizeof(vector))
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">S</span> <span class="n">s</span> <span class="o">=</span> <span class="p">{</span><span class="s">"Hello world"</span><span class="p">};</span>
+    <span class="cm">/*
+    Okay, so we can set this choice type to a string
+    Actually, this just sets the value to the first type. Looks like order matters.
+    At this point, reading from s.vec is undefined behavior
+    Shouldn't reading from s.vec throw an error or something?
+    */</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"s.str = "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">str</span><span class="p">.</span><span class="o">~</span><span class="n">basic_string</span><span class="p">();</span>  <span class="c1">// uhm, destroying the string with its literal destructor?
+</span>
+    <span class="cm">/*
+    s = { std::vector&lt;int&gt;{12,34} };
+    We can't this op, which is pretty unintuitive
+    since we could handle the string case.
+    */</span>
+    <span class="k">new</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">.</span><span class="n">vec</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="c1">// now, s.vec is the active member of the union
+</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">vec</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">vec</span><span class="p">.</span><span class="o">~</span><span class="n">vector</span><span class="p">();</span> <span class="c1">// another destructor!
+</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>To me, it makes little sense for the developer using union to control so much of the nitty gritty. Huge points against using this at all are:</p>
+<ul>
+  <li>There’s no way to check the active type, making the program keep state of the union separately,</li>
+  <li>The developer must explicitly call the constructors and destructor of the contained objects to manage internal state.</li>
+  <li>There’s no consistency in setting the value
+Limitations, described by cppreference:</li>
+  <li>no virtual functions allowed</li>
+  <li>cannot have base classes</li>
+  <li>cannot be used as a base class</li>
+  <li>cannot have non-static data members of reference types
+Union just seems like a super clunky, crude implementation of a lower-level type, but finally C++17 improves on this: Introducing the new and improved <code class="highlighter-rouge">std::variant</code>!</li>
+</ul>
+
+<h3 id="stdvariant">std::variant</h3>
+<p>Unrelated to statistical variance mentioned in my previous post, the std::variant is a new feature in the C++17 standard library. It’s similar to the existing boost::variant. We can define union or choice types with a more comprehensive solution.</p>
+
+<p>Let’s see if this is something that sucks a little less, shall we?</p>
+
+<p>int main() {
+    std::variant&lt;std::vector<int>, std::string&gt; mVariant;
+    mVariant = "hello world";  // We can match types without it being the first one!
+    std::cout &lt;&lt; mVariant.index() &lt;&lt; std::endl;  // prints "1", the index in the template
+    mVariant = std::vector{1, 2, 3};
+    // We can change the value without manually calling the destructor!
+    // Setting the value makes sense with the assignment operator
+    mVariant = "this is so much better already";</int></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// index() does a good enough job, but there's also std::get() and std::get_if()
+// for your value getting needs
+
+auto strPtr = std::get&lt;std::string&gt;(mVariant);  // Could throw std::bad_variant_access
+std::cout &lt;&lt; *strPtr &lt;&lt; std::endl;  // success
+
+auto strPtr = std::get_if&lt;std::string&gt;(mVariant);  // no throw! woo!
+if (strPtr) {
+    std::cout &lt;&lt; *strPtr &lt;&lt; std::endl;
+}
+
+// We don't have to get the value to check the value.
+// std also has holds_alternative:
+if (std::holds_alternative&lt;std::string&gt;(mVariant)) {
+    std::cout &lt;&lt; "variant holds a string" &lt;&lt; std::endl;
+}
+
+// We can also change the values other ways
+mVariant.emplace&lt;1&gt;(std::string("emplace me"));
+// Because get() returns a reference, we can do things like
+std::get&lt;std::string&gt;(mVariant) += " append me";
+</code></pre></div></div>
+
+<p>}</p>
+
+<p>I’d say that this is a much more mature and featured implementation of the choice type wanted.</p>
+
+<p>There are a few great things about std::variant:</p>
+
+<p>If you haven’t noticed, all the getters are type safe.
+You can figure out the current type with holds_alternative() and index()
+You don’t have to manually call constructors/destructors, even on non-trival types.
+There’s no extra memory allocation besides the one for std::variant itself, which can stay on the stack; no heap allocations except for the held object itself.
+std::visit
+std::visit is a function that applies a function, called a “Visitor”, on the variant. Visitors are used to</p>
+
+<p>It’s easier to see in an example than it is to explain in words.</p>
+
+<p>int main() {
+    auto PrintVisitor = <a href="const auto&amp; type"></a> { std:: cout « type « ” visited”; };
+    std::variant&lt;int, double&gt; mVariant { 1 };
+    std::visit(PrintVisitor, mVariant);  // prints “1 visited”</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// We can selectively modify a variant based on its type through a struct
+struct MathVisitor {
+    void operator()(int&amp; i) const {
+        i *= 2;
+    }
+
+    void operator()(float&amp; f) const {
+        f *= 1.5f;
+    }
+}
+// if int value, multiply by 2. if float, multiply by 1.5
+std::visit(MathVisitor(), mVariant);  // mVariant holds an int value of 2
+std::visit(PrintVisitor, mVariant);  // prints "2 visited"
+</code></pre></div></div>
+
+<p>There’s only a few places std::variant actually comes into use that I can think of, so it’s not the most useful thing in the world. Only a few niche circumstances come to mind:</p>
+
+<p>Error handling: returning either the success value or an error.
+Using them to handle an object that might be defined by a string name or int id
+???
+I have some issues with the visitor function. It still feels a little clunky and verbose.  There’s still some refinement to be done here, but overall, I think std::variant and friends are a great replacement for union.</p>
+
+:ET

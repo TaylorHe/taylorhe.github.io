@@ -1,0 +1,78 @@
+I"A,<p>It’s finally here, the day we’ve all been waiting for. Well, not exactly, as Typescript 3.7 was released November 5. It solves one of the most annoying issues of javascript: optional parameter chaining. There have been attempts at solving this problem in <a href="https://lodash.com/">lodash</a>, <a href="https://github.com/facebookincubator/idx">idx</a> and other libraries, but it’s great that typescript now supports this functionality natively.</p>
+
+<h3 id="issue">Issue</h3>
+<p>Let’s first describe the issue of accessing a nested object property. For an example, let’s take the decently nested object obj defined as follows:</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">a</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">b</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">c</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">d</span><span class="p">:</span> <span class="dl">"</span><span class="s2">hello world</span><span class="dl">"</span><span class="p">,</span>
+                <span class="na">dEmpty</span><span class="p">:</span> <span class="dl">""</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="na">e</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">f</span><span class="p">:</span> <span class="p">[{</span> <span class="na">g0</span><span class="p">:</span> <span class="dl">"</span><span class="s2">nice</span><span class="dl">"</span> <span class="p">}]</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Any of the properties can be null or undefined, so how does one access property d? In pre-Typescript 3.7, it’s common practice to short circuit the conditional like so:</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="k">if</span> <span class="p">(</span><span class="nx">obj</span> 
+    <span class="o">&amp;&amp;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">a</span> 
+    <span class="o">&amp;&amp;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">.</span><span class="nx">b</span> 
+    <span class="o">&amp;&amp;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span>
+    <span class="o">&amp;&amp;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span><span class="p">.</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">a</span><span class="p">.</span><span class="nx">b</span><span class="p">.</span><span class="nx">c</span><span class="p">.</span><span class="nx">d</span><span class="p">);</span>  <span class="c1">// hello world safely accessed
+</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>I’ve even seen other monstrosities when arrays are mixed in:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">if</span> <span class="p">(</span><span class="nx">obj</span> <span class="o">&amp;&amp;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">e</span> <span class="o">&amp;&amp;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">e</span><span class="p">.</span><span class="nx">f</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">e</span><span class="p">.</span><span class="nx">f</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">e</span><span class="p">.</span><span class="nx">f</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">e</span><span class="p">.</span><span class="nx">f</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">g0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">e</span><span class="p">.</span><span class="nx">f</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">g0</span><span class="p">);</span>  <span class="c1">// =&gt; "nice"
+</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="optional-chaining">Optional Chaining</h3>
+<p>But those days are all over with Typescript 3.7’s optional chaining. Basically what it allows you to do is stop running an expression if one of the previous arguments is null or undefined.</p>
+
+<p>Now we can write the same expressions with the new syntax <code class="highlighter-rouge">?.</code> can the above code can be condensed to:</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="c1">// Same as checking if each parameter along the chain is either null or undefined
+</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">?.</span><span class="nx">a</span><span class="p">?.</span><span class="nx">b</span><span class="p">?.</span><span class="nx">c</span><span class="p">?.</span><span class="nx">d</span><span class="p">);</span>    <span class="c1">// =&gt; "hello world" safely accessed
+</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">?.</span><span class="nx">a</span><span class="p">?.</span><span class="nx">b</span><span class="p">?.</span><span class="nx">c</span><span class="p">?.</span><span class="nx">foo</span><span class="p">);</span>  <span class="c1">// =&gt; returns undefined, and does not throw
+</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">?.</span><span class="nx">e</span><span class="p">?.</span><span class="nx">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]?.</span><span class="nx">g0</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// Safe access or undefined</span></code></pre></figure>
+
+<p>Nullish Coalescing
+If we combine this new feature with yet another great Typescript 3.7 feature, nullish coalescing, denoted by a <code class="highlighter-rouge">??</code>, it can be a powerful tool. Null coalescing is to check if the expression given is null or undefined.</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="kc">undefined</span> <span class="p">??</span> <span class="dl">"</span><span class="s2">default</span><span class="dl">"</span>  <span class="c1">// =&gt; "default"
+</span>
+<span class="kc">null</span> <span class="p">??</span> <span class="dl">"</span><span class="s2">default</span><span class="dl">"</span>       <span class="c1">// =&gt; "default"
+</span>
+<span class="dl">""</span> <span class="p">??</span> <span class="dl">"</span><span class="s2">default</span><span class="dl">"</span>         <span class="c1">// =&gt; ""</span></code></pre></figure>
+
+<p>It’s slightly different than the OR symbol <code class="highlighter-rouge">||</code>, as that also checks if the expression is an empty string or 0. Combining them looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">?.</span><span class="nx">a</span><span class="p">?.</span><span class="nx">b</span><span class="p">?.</span><span class="nx">c</span><span class="p">?.</span><span class="nx">d</span> <span class="p">??</span> <span class="dl">"</span><span class="s2">default value</span><span class="dl">"</span><span class="p">);</span>  <span class="c1">// =&gt; "hello world"
+</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">?.</span><span class="nx">a</span><span class="p">?.</span><span class="nx">foo</span><span class="p">?.</span><span class="nx">c</span><span class="p">?.</span><span class="nx">d</span> <span class="p">??</span> <span class="dl">"</span><span class="s2">default value</span><span class="dl">"</span><span class="p">);</span>  <span class="c1">// =&gt; "default value"
+</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">?.</span><span class="nx">a</span><span class="p">?.</span><span class="nx">foo</span><span class="p">?.</span><span class="nx">c</span><span class="p">?.</span><span class="nx">dEmpty</span> <span class="p">??</span> <span class="dl">"</span><span class="s2">default value</span><span class="dl">"</span><span class="p">);</span>  <span class="c1">// =&gt; ""
+</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">?.</span><span class="nx">e</span><span class="p">?.</span><span class="nx">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]?.</span><span class="nx">g0</span> <span class="p">??</span> <span class="dl">"</span><span class="s2">default value</span><span class="dl">"</span><span class="p">);</span>  <span class="c1">// =&gt; "nice"
+</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">?.</span><span class="nx">e</span><span class="p">?.</span><span class="nx">f</span><span class="p">[</span><span class="mi">42</span><span class="p">]?.</span><span class="nx">g0</span> <span class="p">??</span> <span class="dl">"</span><span class="s2">default value</span><span class="dl">"</span><span class="p">);</span>  <span class="c1">// =&gt; "default value"</span></code></pre></figure>
+
+<p>I’m really excited to start putting optional chaining to use.</p>
+:ET

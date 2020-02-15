@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2: Python's Walrus Operator"
+title:  "Python's Walrus Operator"
 date:   2019-12-23 03:00:00 -0500
 <!-- categories:  -->
 ---

@@ -1,0 +1,135 @@
+I"l<<p>I haven’t used unions in C++ because they’re just not intuitive enough to me. They’re horrendous to write and a pain to maintain. Let’s go over what they are.</p>
+
+<p>A <code class="highlighter-rouge">union</code> is a special class type that can only hold one of its members at a time. It’s similar to a <code class="highlighter-rouge">struct</code> declaration. Take the following sample code from <a href="https://en.cppreference.com/w/cpp/language/union">cppreference</a>. I’ve added some of my thoughts.</p>
+
+<figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="k">union</span> <span class="n">S</span> <span class="p">{</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vec</span><span class="p">;</span>
+   <span class="o">~</span><span class="n">S</span><span class="p">()</span> <span class="p">{}</span> <span class="c1">// needs to know which member is active, only possible in union-like class
+</span>
+<span class="p">};</span>  <span class="c1">// the whole union occupies max(sizeof(string), sizeof(vector))
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">S</span> <span class="n">s</span> <span class="o">=</span> <span class="p">{</span><span class="s">"Hello world"</span><span class="p">};</span>
+    <span class="cm">/*
+    Okay, so we can set this choice type to a string
+    Actually, this just sets the value to the first type. Looks like order matters.
+    At this point, reading from s.vec is undefined behavior
+    Shouldn't reading from s.vec throw an error or something?
+    */</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"s.str = "</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">str</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">str</span><span class="p">.</span><span class="o">~</span><span class="n">basic_string</span><span class="p">();</span>  <span class="c1">// uhm, destroying the string with its literal destructor?
+</span>
+    <span class="cm">/*
+    s = { std::vector&lt;int&gt;{12,34} };
+    We can't this op, which is pretty unintuitive
+    since we could handle the string case.
+    */</span>
+    <span class="k">new</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">.</span><span class="n">vec</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="c1">// now, s.vec is the active member of the union
+</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">vec</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">vec</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">'\n'</span><span class="p">;</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">vec</span><span class="p">.</span><span class="o">~</span><span class="n">vector</span><span class="p">();</span> <span class="c1">// another destructor!
+</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>To me, it makes little sense for the developer using union to control so much of the nitty gritty. Huge points against using this at all are:</p>
+<ul>
+  <li>There’s no way to check the active type, making the program keep state of the union separately,</li>
+  <li>The developer must explicitly call the constructors and destructor of the contained objects to manage internal state.</li>
+  <li>There’s no consistency in setting the value</li>
+</ul>
+
+<p>Limitations, described by cppreference:</p>
+<ul>
+  <li>no virtual functions allowed</li>
+  <li>cannot have base classes</li>
+  <li>cannot be used as a base class</li>
+  <li>cannot have non-static data members of reference types
+Union just seems like a super clunky, crude implementation of a lower-level type, but finally C++17 improves on this: Introducing the new and improved <code class="highlighter-rouge">std::variant</code>!</li>
+</ul>
+
+<h3 id="stdvariant">std::variant</h3>
+<p>Unrelated to statistical variance mentioned in my [deleted] previous post, the <code class="highlighter-rouge">std::variant</code> is a new feature in the C++17 standard library. It’s similar to the existing <code class="highlighter-rouge">boost::variant</code>. We can define union or choice types with a more comprehensive solution.</p>
+
+<p>Let’s see if this is something that sucks a little less, shall we?</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">mVariant</span><span class="p">;</span>
+    <span class="n">mVariant</span> <span class="o">=</span> <span class="s">"hello world"</span><span class="p">;</span>  <span class="c1">// We can match types without it being the first one!
+</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">mVariant</span><span class="p">.</span><span class="n">index</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>  <span class="c1">// "1", the index in the template
+</span>
+    <span class="n">mVariant</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+    <span class="cm">/* We can change the value without manually calling the destructor!
+    Setting the value makes sense with the assignment operator */</span>
+    <span class="n">mVariant</span> <span class="o">=</span> <span class="s">"this is so much better already"</span><span class="p">;</span>
+
+    <span class="cm">/* index() does a good enough job, but there's also
+    other ways to satiate your value getting needs 
+        std::get() could throw std::bad_variant_access, while
+        std::get_if() does not throw */</span>
+    <span class="k">auto</span> <span class="n">strPtr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mVariant</span><span class="p">);</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">strPtr</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">strPtr</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">get_if</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mVariant</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">strPtr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">strPtr</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="cm">/* We don't have to get the value to check the value.
+    std also has holds_alternative: */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">holds_alternative</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mVariant</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"variant holds a string"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/* We can also change the values other ways: */</span>
+    <span class="n">mVariant</span><span class="p">.</span><span class="n">emplace</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"emplace me"</span><span class="p">));</span>
+    
+    <span class="cm">/* Because get() returns a reference, we can do things like */</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mVariant</span><span class="p">)</span> <span class="o">+=</span> <span class="s">" append me"</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>I’d say that this is a much more mature and featured implementation of the choice type wanted.</p>
+
+<p>There are a few great things about <code class="highlighter-rouge">std::variant</code>:</p>
+
+<p>If you haven’t noticed, all the getters are type safe.
+You can figure out the current type with holds_alternative() and index()
+You don’t have to manually call constructors/destructors, even on non-trival types.
+There’s no extra memory allocation besides the one for std::variant itself, which can stay on the stack; no heap allocations except for the held object itself.</p>
+
+<h3 id="stdvisit">std::visit</h3>
+<p><code class="highlighter-rouge">std::visit</code> is a function that applies a function, called a “Visitor”, on a <code class="highlighter-rouge">std::variant</code>. Visitors are used to</p>
+
+<p>It’s easier to see in an example than it is to explain in words.</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">PrintVisitor</span> <span class="o">=</span> <span class="p">[](</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">type</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">type</span> <span class="o">&lt;&lt;</span> <span class="s">" visited"</span><span class="p">;</span> <span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">double</span><span class="o">&gt;</span> <span class="n">mVariant</span> <span class="p">{</span> <span class="mi">1</span> <span class="p">};</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">PrintVisitor</span><span class="p">,</span> <span class="n">mVariant</span><span class="p">);</span>  <span class="c1">// prints "1 visited"
+</span>
+    <span class="cm">/* We can selectively modify a variant based on its type through a struct */</span>
+    <span class="k">struct</span> <span class="n">MathVisitor</span> <span class="p">{</span>
+    	<span class="cm">/* if int value, multiply by 2. if float, multiply by 1.5 */</span>
+        <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+            <span class="n">i</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="kt">float</span><span class="o">&amp;</span> <span class="n">f</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+            <span class="n">f</span> <span class="o">*=</span> <span class="mf">1.5</span><span class="n">f</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">MathVisitor</span><span class="p">(),</span> <span class="n">mVariant</span><span class="p">);</span>  <span class="c1">// mVariant holds an int value of 2
+</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">visit</span><span class="p">(</span><span class="n">PrintVisitor</span><span class="p">,</span> <span class="n">mVariant</span><span class="p">);</span>  <span class="c1">// prints "2 visited"</span></code></pre></figure>
+
+<p>There’s only a few places <code class="highlighter-rouge">std::variant</code> actually comes into use that I can think of, so it’s not the most useful thing in the world. Only a few niche circumstances come to mind:</p>
+
+<ul>
+  <li>Error handling: returning either the success value or an error.</li>
+  <li>Using them to handle an object that might be defined by a string name or int id</li>
+  <li>???
+I have some issues with the visitor function. It still feels a little clunky and verbose.  There’s still some refinement to be done here, but overall, I think <code class="highlighter-rouge">std::variant</code> and friends are a great replacement for <code class="highlighter-rouge">union</code>.</li>
+</ul>
+
+:ET

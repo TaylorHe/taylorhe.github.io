@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "1: Perfect Forwarding"
+title:  "Perfect Forwarding"
 date:   2019-12-21 03:00:00 -0500
 <!-- categories:  -->
 ---

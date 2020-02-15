@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Build a String | Programbling</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Build a String" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Build A String The build a string question is posed on HackerRank here. For the sake of concise-ness, I won’t repeat the question. Take a minute to read it. Are you done yet? Okay, good. Time to get solvin’. Attempt 1: Dynamic Programming Immediately after reading the problem, my mind goes to a dynamic programming solution. I quickly draft some Python code: Yes, I use Sublime Text, the world’s easiest and nicest looking text editor. Don’t judge me, vim-lords. Anyway, this solution is very straightforward. All we do here is keep the lowest costs so far in an array as we build the new string, so we have cached values that we can overwrite in the array. There are a few minor pruning optimizations I had added in, but they’re not too important. I left comments in the code describing what they are. This simple, quick and dirty solution is of O(n3) time complexity. It passes the first 10 out of 20 solutions, with the last half timing out. We’re halfway there. (oh oh, living on a prayer!) In order to optimize the algorithm, we must examine its pain points. One of the major items slowing it down is last condition in the while loop: s[i:i+1], s[i:i+2],... in s[:i]. Let’s tackle that one first. Attempt 2: DP + Caching Found Substrings The new code doesn’t change much from the old, except that it now has a found_substrings set that caches repeated substrings. The idea is that we shouldn’t need to compute that expensive operation more than once. Great in theory, not so great in practice. Unfortunately HackerRank gives a runtime error; likely the set uses too much memory. Attempt 3: DP + Caching Found Indices I tried running this same code again, except now instead of caching the whole string, I cache the pair of indices where the string starts and ends, but run into the same runtime issue as Attempt 2. Attempt 4: Rabin Karp Okay, time to pull out the big guns. If a simple solution doesn’t want to work, I guess I’ll have to pull out something a little more advanced. In this case, it was after a few days of googling around and checking stack overflow for inspiration in solving this problem. Finally, I had settled on an optimization of Python’s in using Rabin Karp search. The naive approach for deciding if one string is a substring of another is to match 1 by 1. Rabin-Karp introduces another way to match strings: it matches the hash value of the pattern with the hash value of current substring of text, and if the hash values match then only it starts matching individual characters. As the window slides, it only takes O(1) time to compute the new hash, and O(1) time to compare hashes. Doing a full string comparison would take up to O(m) time every time you slide the window, where m is the length of the substring. Here goes nothing, having just learned the existence of Rabin-Karp a few minutes prior. I substitute the Rabin Karp search into our previous attempts’ while loop. Unfortunately, I have done something truly awful, as Rabin Karp decides to Karp out on me. Likely there is a bug, or maybe I failed to implement the algorithm correctly. However, by this point I’m ready to rethink a solution. Attempt 5: Suffix Arrays Suffix Arrays is another random topic I found on google a way to quickly index into every occurrence of a substring pattern P within the string S. Basically, it takes O(n log n) time to construct a suffix array that stores an array of all suffixes in a string. You can read more about them here. Oh man, here we go again. cracks knuckles What a doozy to understand and implement… now I can plug and play this algorithm, and get a 20/20 test case pass! But unfortunately the world hates me, as I most likely have bugs in the implementation I don’t feel like debugging. Post Mortem I come back to this problem a few times a year, and every time, I am stumped. I’ve tried fixing my above implementations, caching different items, but nothing seems to work. Let me know if you have any ideas or solutions in the comments; I’d love to get this two year old problem solved." />
+<meta property="og:description" content="Build A String The build a string question is posed on HackerRank here. For the sake of concise-ness, I won’t repeat the question. Take a minute to read it. Are you done yet? Okay, good. Time to get solvin’. Attempt 1: Dynamic Programming Immediately after reading the problem, my mind goes to a dynamic programming solution. I quickly draft some Python code: Yes, I use Sublime Text, the world’s easiest and nicest looking text editor. Don’t judge me, vim-lords. Anyway, this solution is very straightforward. All we do here is keep the lowest costs so far in an array as we build the new string, so we have cached values that we can overwrite in the array. There are a few minor pruning optimizations I had added in, but they’re not too important. I left comments in the code describing what they are. This simple, quick and dirty solution is of O(n3) time complexity. It passes the first 10 out of 20 solutions, with the last half timing out. We’re halfway there. (oh oh, living on a prayer!) In order to optimize the algorithm, we must examine its pain points. One of the major items slowing it down is last condition in the while loop: s[i:i+1], s[i:i+2],... in s[:i]. Let’s tackle that one first. Attempt 2: DP + Caching Found Substrings The new code doesn’t change much from the old, except that it now has a found_substrings set that caches repeated substrings. The idea is that we shouldn’t need to compute that expensive operation more than once. Great in theory, not so great in practice. Unfortunately HackerRank gives a runtime error; likely the set uses too much memory. Attempt 3: DP + Caching Found Indices I tried running this same code again, except now instead of caching the whole string, I cache the pair of indices where the string starts and ends, but run into the same runtime issue as Attempt 2. Attempt 4: Rabin Karp Okay, time to pull out the big guns. If a simple solution doesn’t want to work, I guess I’ll have to pull out something a little more advanced. In this case, it was after a few days of googling around and checking stack overflow for inspiration in solving this problem. Finally, I had settled on an optimization of Python’s in using Rabin Karp search. The naive approach for deciding if one string is a substring of another is to match 1 by 1. Rabin-Karp introduces another way to match strings: it matches the hash value of the pattern with the hash value of current substring of text, and if the hash values match then only it starts matching individual characters. As the window slides, it only takes O(1) time to compute the new hash, and O(1) time to compare hashes. Doing a full string comparison would take up to O(m) time every time you slide the window, where m is the length of the substring. Here goes nothing, having just learned the existence of Rabin-Karp a few minutes prior. I substitute the Rabin Karp search into our previous attempts’ while loop. Unfortunately, I have done something truly awful, as Rabin Karp decides to Karp out on me. Likely there is a bug, or maybe I failed to implement the algorithm correctly. However, by this point I’m ready to rethink a solution. Attempt 5: Suffix Arrays Suffix Arrays is another random topic I found on google a way to quickly index into every occurrence of a substring pattern P within the string S. Basically, it takes O(n log n) time to construct a suffix array that stores an array of all suffixes in a string. You can read more about them here. Oh man, here we go again. cracks knuckles What a doozy to understand and implement… now I can plug and play this algorithm, and get a 20/20 test case pass! But unfortunately the world hates me, as I most likely have bugs in the implementation I don’t feel like debugging. Post Mortem I come back to this problem a few times a year, and every time, I am stumped. I’ve tried fixing my above implementations, caching different items, but nothing seems to work. Let me know if you have any ideas or solutions in the comments; I’d love to get this two year old problem solved." />
+<link rel="canonical" href="http://localhost:4000/2019/12/27/build-a-string.html" />
+<meta property="og:url" content="http://localhost:4000/2019/12/27/build-a-string.html" />
+<meta property="og:site_name" content="Programbling" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-12-27T03:00:00-05:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2019/12/27/build-a-string.html"},"datePublished":"2019-12-27T03:00:00-05:00","url":"http://localhost:4000/2019/12/27/build-a-string.html","description":"Build A String The build a string question is posed on HackerRank here. For the sake of concise-ness, I won’t repeat the question. Take a minute to read it. Are you done yet? Okay, good. Time to get solvin’. Attempt 1: Dynamic Programming Immediately after reading the problem, my mind goes to a dynamic programming solution. I quickly draft some Python code: Yes, I use Sublime Text, the world’s easiest and nicest looking text editor. Don’t judge me, vim-lords. Anyway, this solution is very straightforward. All we do here is keep the lowest costs so far in an array as we build the new string, so we have cached values that we can overwrite in the array. There are a few minor pruning optimizations I had added in, but they’re not too important. I left comments in the code describing what they are. This simple, quick and dirty solution is of O(n3) time complexity. It passes the first 10 out of 20 solutions, with the last half timing out. We’re halfway there. (oh oh, living on a prayer!) In order to optimize the algorithm, we must examine its pain points. One of the major items slowing it down is last condition in the while loop: s[i:i+1], s[i:i+2],... in s[:i]. Let’s tackle that one first. Attempt 2: DP + Caching Found Substrings The new code doesn’t change much from the old, except that it now has a found_substrings set that caches repeated substrings. The idea is that we shouldn’t need to compute that expensive operation more than once. Great in theory, not so great in practice. Unfortunately HackerRank gives a runtime error; likely the set uses too much memory. Attempt 3: DP + Caching Found Indices I tried running this same code again, except now instead of caching the whole string, I cache the pair of indices where the string starts and ends, but run into the same runtime issue as Attempt 2. Attempt 4: Rabin Karp Okay, time to pull out the big guns. If a simple solution doesn’t want to work, I guess I’ll have to pull out something a little more advanced. In this case, it was after a few days of googling around and checking stack overflow for inspiration in solving this problem. Finally, I had settled on an optimization of Python’s in using Rabin Karp search. The naive approach for deciding if one string is a substring of another is to match 1 by 1. Rabin-Karp introduces another way to match strings: it matches the hash value of the pattern with the hash value of current substring of text, and if the hash values match then only it starts matching individual characters. As the window slides, it only takes O(1) time to compute the new hash, and O(1) time to compare hashes. Doing a full string comparison would take up to O(m) time every time you slide the window, where m is the length of the substring. Here goes nothing, having just learned the existence of Rabin-Karp a few minutes prior. I substitute the Rabin Karp search into our previous attempts’ while loop. Unfortunately, I have done something truly awful, as Rabin Karp decides to Karp out on me. Likely there is a bug, or maybe I failed to implement the algorithm correctly. However, by this point I’m ready to rethink a solution. Attempt 5: Suffix Arrays Suffix Arrays is another random topic I found on google a way to quickly index into every occurrence of a substring pattern P within the string S. Basically, it takes O(n log n) time to construct a suffix array that stores an array of all suffixes in a string. You can read more about them here. Oh man, here we go again. cracks knuckles What a doozy to understand and implement… now I can plug and play this algorithm, and get a 20/20 test case pass! But unfortunately the world hates me, as I most likely have bugs in the implementation I don’t feel like debugging. Post Mortem I come back to this problem a few times a year, and every time, I am stumped. I’ve tried fixing my above implementations, caching different items, but nothing seems to work. Let me know if you have any ideas or solutions in the comments; I’d love to get this two year old problem solved.","headline":"Build a String","dateModified":"2019-12-27T03:00:00-05:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Programbling" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Programbling</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Build a String</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-12-27T03:00:00-05:00" itemprop="datePublished">Dec 27, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3 id="build-a-string">Build A String</h3>
+<p>The build a string question is posed on HackerRank <a href="https://www.hackerrank.com/challenges/build-a-string/problem">here</a>. For the sake of concise-ness, I won’t repeat the question.</p>
+
+<p>Take a minute to read it.</p>
+
+<p>Are you done yet? Okay, good. Time to get solvin’.</p>
+
+<h3 id="attempt-1-dynamic-programming">Attempt 1: Dynamic Programming</h3>
+<p>Immediately after reading the problem, my mind goes to a dynamic programming solution. I quickly draft some Python code:</p>
+
+<p><img src="/assets/img/buildstring0.png" alt="buildstring0" /></p>
+
+<p>Yes, I use Sublime Text, the world’s easiest and nicest looking text editor. Don’t judge me, vim-lords.</p>
+
+<p>Anyway, this solution is very straightforward. All we do here is keep the lowest costs so far in an array as we build the new string, so we have cached values that we can overwrite in the array.</p>
+
+<p>There are a few minor pruning optimizations I had added in, but they’re not too important. I left comments in the code describing what they are.</p>
+
+<p>This simple, quick and dirty solution is of O(n<sup>3</sup>) time complexity. It passes the first 10 out of 20 solutions, with the last half timing out. We’re halfway there. (oh oh, living on a prayer!)</p>
+
+<p><img src="/assets/img/buildstring1.png" alt="buildstring1" /></p>
+
+<p>In order to optimize the algorithm, we must examine its pain points. One of the major items slowing it down is last condition in the while loop: <code class="highlighter-rouge">s[i:i+1], s[i:i+2],... in s[:i]</code>.</p>
+
+<p>Let’s tackle that one first.</p>
+
+<h3 id="attempt-2-dp--caching-found-substrings">Attempt 2: DP + Caching Found Substrings</h3>
+
+<p><img src="/assets/img/buildstring2.png" alt="buildstring2" /></p>
+
+<p>The new code doesn’t change much from the old, except that  it now has a found_substrings set that caches repeated substrings. The idea is that we shouldn’t need to compute that expensive operation more than once.</p>
+
+<p>Great in theory, not so great in practice. Unfortunately HackerRank gives a runtime error; likely the set uses too much memory.</p>
+
+<p><img src="/assets/img/buildstring3.png" alt="buildstring3" /></p>
+
+<h3 id="attempt-3-dp--caching-found-indices">Attempt 3: DP + Caching Found Indices</h3>
+<p>I tried running this same code again, except now instead of caching the whole string, I cache the pair of indices where the string starts and ends, but run into the same runtime issue as Attempt 2.</p>
+
+<h3 id="attempt-4-rabin-karp">Attempt 4: Rabin Karp</h3>
+<p>Okay, time to pull out the big guns. If a simple solution doesn’t want to work, I guess I’ll have to pull out something a little more advanced. In this case, it was after a few days of googling around and checking stack overflow for inspiration in solving this problem. Finally, I had settled on an optimization of Python’s in using Rabin Karp search.</p>
+
+<p>The naive approach for deciding if one string is a substring of another is to match 1 by 1.</p>
+
+<p>Rabin-Karp introduces another way to match strings: it matches the hash value of the pattern with the hash value of current substring of text, and if the hash values match then only it starts matching individual characters. As the window slides, it only takes O(1) time to compute the new hash, and O(1) time to compare hashes.</p>
+
+<p>Doing a full string comparison would take up to O(m) time every time you slide the window, where m is the length of the substring.</p>
+
+<p>Here goes nothing, having just learned the existence of Rabin-Karp a few minutes prior.</p>
+
+<p><img src="/assets/img/buildstring4.png" alt="buildstring4" /></p>
+
+<p>I substitute the Rabin Karp search into our previous attempts’ while loop.</p>
+
+<p><img src="/assets/img/buildstring5.png" alt="buildstring5" /></p>
+
+<p>Unfortunately, I have done something truly awful, as Rabin Karp decides to Karp out on me.</p>
+
+<p><img src="/assets/img/buildstring6.png" alt="buildstring6" /></p>
+
+<p>Likely there is a bug, or maybe I failed to implement the algorithm correctly. However, by this point I’m ready to rethink a solution.</p>
+
+<h3 id="attempt-5-suffix-arrays">Attempt 5: Suffix Arrays</h3>
+<p>Suffix Arrays is another random topic I found on google a way to quickly index into every occurrence of a substring pattern P within the string S. Basically, it takes O(n log n) time to construct a suffix array that stores an array of all suffixes in a string. You can read more about them here.</p>
+
+<p>Oh man, here we go again. <em>cracks knuckles</em></p>
+
+<p><img src="/assets/img/buildstring7.png" alt="buildstring7" />
+<img src="/assets/img/buildstring8.png" alt="buildstring8" /></p>
+
+<p>What a doozy to understand and implement… now I can plug and play this algorithm, and get a 20/20 test case pass!</p>
+
+<p><img src="/assets/img/buildstring9.png" alt="buildstring9" />
+<img src="/assets/img/buildstring10.png" alt="buildstring10" /></p>
+
+<p>But unfortunately the world hates me, as I most likely have bugs in the implementation I don’t feel like debugging.</p>
+
+<h3 id="post-mortem">Post Mortem</h3>
+<p>I come back to this problem a few times a year, and every time, I am stumped. I’ve tried fixing my above implementations, caching different items, but nothing seems to work.</p>
+
+<p>Let me know if you have any ideas or solutions in the comments; I’d love to get this two year old problem solved.</p>
+
+
+  </div><a class="u-url" href="/2019/12/27/build-a-string.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Programbling</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Programbling</li><li><a class="u-email" href="mailto:taylor.he7@gmail.com">taylor.he7@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/taylorhe"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">taylorhe</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>I ramble about programming and other topics.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
