@@ -33,7 +33,7 @@ if (block := file.readline() is not None:
 And finally, it can make expressions in list comprehension more efficient.
 {% highlight python %}
 # No walrus makes this list comprehension perform expensive_operation twice!
-values = [1,2,3,4,5, ... ]  // Some random list
+values = [1, 2, 3, 4, 5, ... ]  // Some random list
 [expensive_operation(v) for v in values if expensive_operation(v) > 0]
 
 # Walrus operator caches the result for you and therefore only computes once

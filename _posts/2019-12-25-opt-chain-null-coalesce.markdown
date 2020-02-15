@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Optional Chaining and Nullish Coalescing in Typescript 3.7"
+title:  "Optional Chaining and Nullish Coalescing"
 date:   2019-12-25 03:00:00 -0500
 <!-- categories:  -->
 excerpt: You wanna read into it, but sometimes it's just not that deep.

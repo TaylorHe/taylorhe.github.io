@@ -38,6 +38,7 @@ linkedin_username: taylorhe
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-seo-tag
 
 
 # Exclude from processing.

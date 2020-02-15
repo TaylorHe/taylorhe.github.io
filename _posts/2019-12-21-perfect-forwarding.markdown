@@ -49,7 +49,7 @@ int main() {
     insert("pizza", 1);               // Success :)   
 }
 {% endhighlight %}
-There are two things to break down here: the concept of a universal reference and the std::forward function. The term universal reference was coined by Scott Meyers in his article, and it describes the concept of taking an rvalue reference to a cv-unqualified template parameter, which can then be deduced as either an l- or r-value reference. It's also known as a forwarding reference, which is its official name. Universal references are only defined when there's a cv-unqualified type, &&, and type deduction takes place.* (see 12/30 edit below for example). In the second and third code snippet, a casual reading of the code would lead the one to think that they are rvalue references, but since the type is deduced by the template and there is a &&, it's actually a universal reference. In practice, we almost never use universal references except in the context of templated functions.
+There are two things to break down here: the concept of a universal reference and the `std::forward` function. The term universal reference was coined by Scott Meyers in his article, and it describes the concept of taking an rvalue reference to a cv-unqualified template parameter, which can then be deduced as either an l- or r-value reference. It's also known as a forwarding reference, which is its official name. Universal references are only defined when there's a cv-unqualified type, &&, and type deduction takes place.* (see 12/30 edit below for example). In the second and third code snippet, a casual reading of the code would lead the one to think that they are rvalue references, but since the type is deduced by the template and there is a &&, it's actually a universal reference. In practice, we almost never use universal references except in the context of templated functions.
 
 
 
@@ -91,7 +91,7 @@ The final question is what does std::forward do? According to the C++ Reference,
 
 
 
-Amazing, right? Using all of universal references, reference collapsing, and std::forward, we can effectively write a single, powerful wrapper function that allows for both l- and r-value references, preserve move semantics and therefore avoid unnecessary copying. What would make this even more cool is to apply variadic templating to accept arbitrary number of arguments on top of perfect forwarding. However, like my evil college textbook, that will be an exercise left to the reader.
+Amazing, right? Using all of universal references, reference collapsing, and `std::forward`, we can effectively write a single, powerful wrapper function that allows for both l- and r-value references, preserve move semantics and therefore avoid unnecessary copying. What would make this even more cool is to apply variadic templating to accept arbitrary number of arguments on top of perfect forwarding. However, like my evil college textbook, that will be an exercise left to the reader.
 
 
 
