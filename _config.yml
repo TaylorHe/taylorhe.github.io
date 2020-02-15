@@ -23,11 +23,14 @@ email: taylor.he7@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   I ramble about programming and other topics.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "http://taylorhe.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+
+# Featured Post
+featured_post: perfect-forwarding
+# Social
 # twitter_username: 
-social_links:
-  github_username:  taylorhe
-  linkedin: taylorhe
+github_username:  taylorhe
+linkedin_username: taylorhe
 
 # Build settings
 theme: minima

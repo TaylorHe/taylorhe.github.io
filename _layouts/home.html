@@ -1,0 +1,49 @@
+---
+layout: default
+---
+
+<div class="home">
+  {%- if page.title -%}
+    <h1 class="page-heading">{{ page.title }}</h1>
+  {%- endif -%}
+
+  {{ content }}
+  <hr />
+  <!-- Featured Post -->
+  {%- if site.featured_post && site.posts.size > 0 -%}
+  <h2 style="margin-bottom: 1em; margin-top: 1em;">Featured Post:  
+  {% assign fpost = site.posts | last %}
+  {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+  <!-- <span class="post-meta">{{ fpost.date | date: date_format }}</span> -->
+  <a class="post-link" style="display: inline; margin-bottom: 3em;" href="{{ fpost.url | relative_url }}">
+    {{ fpost.title | escape }}
+  </a>
+  {%- if site.show_excerpts -%}
+    {{ fpost.excerpt }}
+  {%- endif -%}
+  </h2>
+  {%- endif -%}
+  
+  {%- if site.posts.size > 0 -%}
+    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+
+    <!-- Posts -->
+    <ul class="post-list">
+      {%- for post in site.posts -%}
+      <li>
+        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+        <span class="post-meta">{{ post.date | date: date_format }}</span>
+        <h3>
+          <a class="post-link" href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+        </h3>
+        {%- if site.show_excerpts -%}
+          {{ post.excerpt }}
+        {%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+</div>
