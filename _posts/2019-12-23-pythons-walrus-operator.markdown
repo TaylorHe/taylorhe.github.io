@@ -2,7 +2,7 @@
 layout: post
 title:  "Python's Walrus Operator"
 date:   2019-12-23 03:00:00 -0500
-<!-- categories:  -->
+excerpt: <img src="assets/img/walrus.jpg" />
 ---
 
 Python 3.8 introduced a nice quality of life assignment expression denoted by ":=".  It's also called the walrus operator because it looks like the eyes and tusks of a walrus on its side. It allows the writer to assign and return a variable in a single expression, which reduces the amount of code you actually have to write to do something. It's much easier to see it in use. Let's check out some examples!

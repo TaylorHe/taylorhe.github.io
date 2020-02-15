@@ -10,22 +10,29 @@ layout: default
   {{ content }}
   <hr />
   <!-- Featured Post -->
-  {%- if site.featured_post && site.posts.size > 0 -%}
-  <h2 style="margin-bottom: 1em; margin-top: 1em;">Featured Post:  
+  {%- if site.featured_post and site.posts.size > 0 -%}
+  <h2 style="margin-top: 1em; margin-bottom: 0.5em">Featured Post:  
   {% assign fpost = site.posts | last %}
   {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
   <!-- <span class="post-meta">{{ fpost.date | date: date_format }}</span> -->
-  <a class="post-link" style="display: inline; margin-bottom: 3em;" href="{{ fpost.url | relative_url }}">
-    {{ fpost.title | escape }}
-  </a>
-  {%- if site.show_excerpts -%}
-    {{ fpost.excerpt }}
-  {%- endif -%}
+
+  <!-- <span class="post-meta" style="display:inline;">{{ fpost.date | date: date_format }}</span> -->
   </h2>
-  {%- endif -%}
+  <h2> <a class="post-link" href="{{ fpost.url | relative_url }}" style="margin-left: 1em;">
+    {{ fpost.title | escape }}
+  </a> </h2>
+    <h4 style="margin-bottom: 3em; margin-left: 1.5em">
+    {%- if site.show_excerpts -%}
+      {{ fpost.excerpt }}
+    {%- endif -%}
+    </h4>
+  </h2>
+
   
+  {%- endif -%}
+  <hr />
   {%- if site.posts.size > 0 -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+    <h2 class="post-list-heading" style="margin-top: 1em;">{{ page.list_title | default: "Posts" }}</h2>
 
     <!-- Posts -->
     <ul class="post-list">

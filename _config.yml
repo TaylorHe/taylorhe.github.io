@@ -25,6 +25,8 @@ description: >- # this means to ignore newlines until "baseurl:"
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://taylorhe.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
+show_excerpts: true
+
 # Featured Post
 featured_post: perfect-forwarding
 # Social
@@ -36,6 +38,7 @@ linkedin_username: taylorhe
 theme: minima
 plugins:
   - jekyll-feed
+
 
 # Exclude from processing.
 # The following items will not be processed, by default.

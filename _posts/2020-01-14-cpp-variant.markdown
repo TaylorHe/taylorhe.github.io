@@ -3,6 +3,7 @@ layout: post
 title:  "C++ Variant"
 date:   2020-01-14 03:00:00 -0500
 <!-- categories:  -->
+excerpt: It's a bird.. It's a plane... It's... std::variant?
 ---
 I haven't used unions in C++ because they're just not intuitive enough to me. They're horrendous to write and a pain to maintain. Let's go over what they are.
 

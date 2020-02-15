@@ -3,6 +3,7 @@ layout: post
 title:  "Optional Chaining and Nullish Coalescing in Typescript 3.7"
 date:   2019-12-25 03:00:00 -0500
 <!-- categories:  -->
+excerpt: You wanna read into it, but sometimes it's just not that deep.
 ---
 It's finally here, the day we've all been waiting for. Well, not exactly, as Typescript 3.7 was released November 5. It solves one of the most annoying issues of javascript: optional parameter chaining. There have been attempts at solving this problem in [lodash](https://lodash.com/), [idx](https://github.com/facebookincubator/idx) and other libraries, but it's great that typescript now supports this functionality natively.
 
