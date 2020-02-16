@@ -2,7 +2,8 @@
 layout: post
 title:  Iterating over a Parameter Pack
 date:   2020-02-12 03:00:00 -0500
-excerpt: Dear C++ people, Make it easier please. Sincerely, me
+excerpt: Dear C++ people, Make it easier please. Sincerely, me.
+tags: c++
 ---
 Occasionally at work, I find myself wanting to use a variadic template to do some operation. Unfortunately, I only have access to C++14 features.
 

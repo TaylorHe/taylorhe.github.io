@@ -3,6 +3,7 @@ layout: post
 title:  Invalid Transactions
 date:   2020-02-15 03:00:00 -0500
 excerpt: That expense is looking sus.
+tags: interview-questions
 ---
 Today we're gonna attempt to solve the leetcode question [Invalid Transactions #1169](https://leetcode.com/problems/invalid-transactions). I haven't seen this questions before, so hopefully I don't get stuck for too long.
 

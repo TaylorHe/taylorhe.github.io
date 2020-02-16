@@ -27,6 +27,9 @@ url: "http://taylorhe.github.io" # the base hostname & protocol for your site, e
 
 show_excerpts: true
 
+header_pages:
+  - about.markdown
+
 # Featured Post
 featured_post: perfect-forwarding
 # Social

@@ -3,6 +3,7 @@ layout: post
 title:  Number of Islands
 date:   2020-01-31 03:00:00 -0500
 excerpt: Leetcode runtime doesn't matter and isn't accurate anyway, so shut up - everyone, probably
+tags: interview-questions
 ---
 After a conversation with a few friends, I realized that I suck at interview problems. I may have prepared for them at one point, but remembering and keeping that algorithmic skill sharp takes time and effort. I think I'll try to keep my skills sharp by doing a problem once a week or so.
 

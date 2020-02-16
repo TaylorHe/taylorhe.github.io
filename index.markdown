@@ -9,4 +9,4 @@ subheading: This is the place where I ramble about cool stuff that no one will r
 <h1> {{ page.heading }} </h1>
 <h3> {{ page.subheading }} </h3>
 
-If you wanna hire me or something, check out <a href="/assets/resume_13FEB2019.pdf">my resume</a>.
+If you wanna hire me or something, check out <a target="_blank" href="/assets/resume_16FEB2019.pdf">my resume</a>.

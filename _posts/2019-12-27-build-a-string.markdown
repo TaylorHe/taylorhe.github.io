@@ -2,8 +2,8 @@
 layout: post
 title:  "Build a String"
 date:   2019-12-27 03:00:00 -0500
-<!-- categories:  -->
 excerpt: A simple problem turns out to be harder than expected.
+tags: interview-questions
 ---
 ### Build A String
 The build a string question is posed on HackerRank [here](https://www.hackerrank.com/challenges/build-a-string/problem). For the sake of concise-ness, I won't repeat the question.

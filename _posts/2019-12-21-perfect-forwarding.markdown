@@ -2,8 +2,8 @@
 layout: post
 title:  "Perfect Forwarding"
 date:   2019-12-21 03:00:00 -0500
-<!-- categories:  -->
 excerpt: No copying allowed, unless it's allowed.
+tags: c++
 ---
 In over-simplified terms, perfect forwarding is a function that forwards its parameters to another function without losing the parameter's qualifiers. It moves the parameters from one function to another, as if the first function does not exist. This is used in templated functions to preserve move semantics, avoid unnecessary copies, and avoid having to write multiple overloaded functions. It becomes more clear in an example.
 
