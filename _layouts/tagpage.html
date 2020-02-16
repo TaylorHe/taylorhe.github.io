@@ -3,6 +3,7 @@ layout: default
 ---
 <div class="post">
 <h1>Tag: {{ page.tag }}</h1>
+<hr style="margin-bottom: 2em">
 <ul class="post-list">
 {% for post in site.tags[page.tag] %}
 	<time class="dt-published" datetime="{{ post.date | date_to_xmlschema }}" itemprop="datePublished">
@@ -17,4 +18,3 @@ layout: default
 {% endfor %}
 </ul>
 </div>
-<hr>
