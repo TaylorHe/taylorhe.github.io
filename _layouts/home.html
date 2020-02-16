@@ -32,8 +32,10 @@ layout: default
   {%- endif -%}
   <hr />
   {%- if site.posts.size > 0 -%}
-    <h2 class="post-list-heading" style="margin-top: 1em;">{{ page.list_title | default: "Posts" }}</h2>
-
+    <div style="display: flex; margin-top: 1em;">
+      <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+      <span style="flex: 50%; margin-left: 5%; margin-right: 5%; margin-top: 0.65em; margin-bottom: 1em;">{% include alltags.html %}</span>
+    </div>
     <!-- Posts -->
     <ul class="post-list">
       {%- for post in site.posts -%}

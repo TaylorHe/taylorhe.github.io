@@ -6,15 +6,14 @@ layout: default
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
     <p class="post-meta">
-      <span>[
+      <span>
+        <span style="margin-right: 1em;"> [ </span>
         {% for tag in page.tags %}
           {% capture tag_name %}{{ tag }}{% endcapture %}
-          &nbsp;
-          <a href="/tag/{{ tag_name }}"><code class="highligher-rouge"
-            style="color: #E0162B; background-color: #bbb;" >
-            <nobr>{{ tag_name }}</nobr></code></a>
+          <span style="padding-right: 1em; margin-bottom: 1em; display: inline-block;"> <a href="/tag/{{ tag_name }}" ><code class="highligher-rouge"
+            style="color: #ff0101; background-color: #ddd;" >
+            <nobr>{{ tag_name }}</nobr></code></a></span>
         {% endfor %}
-        &nbsp;
       ]</span> <br /> <br />
       <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
         {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
