@@ -28,6 +28,7 @@ url: "http://taylorhe.github.io" # the base hostname & protocol for your site, e
 show_excerpts: true
 
 header_pages:
+  - experience.markdown
   - about.markdown
 
 # Featured Post

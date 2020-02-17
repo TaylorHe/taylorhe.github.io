@@ -28,6 +28,20 @@ $content-width:    900px !default;
 $on-palm:          600px !default;
 $on-laptop:        900px !default;
 
+
+$metro-blue:          #0039A6 !default;
+$metro-orange:        #FF6319 !default;
+$metro-lightgreen:    #6CBE45 !default;
+$metro-brown:         #996633 !default;
+$metro-lightgrey:     #A7A9AC !default;
+$metro-yellow:        #FCCC0A !default;
+$metro-grey:          #808183 !default;
+$metro-red:           #EE352E !default;
+$metro-green:         #00933C !default;
+$metro-purple:        #B933AD !default;
+
+
+
 // Use media queries like this:
 // @include media-query($on-palm) {
 //   .wrapper {
