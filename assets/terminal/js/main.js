@@ -12,17 +12,17 @@ var configs = (function () {
         }
     };
     Singleton.defaultOptions = {
-        general_help: "Congrats on finding the help command! Here's a list of commands currently supported by this makeshift terminal.",
+        general_help: "Congrats on finding the help command!\nHere's a list of commands currently supported by this makeshift terminal.",
         ls_help: "List information about the files and folders.",
         cat_help: "Read file content and print it to the standard output.",
         whoami_help: "Who am I?",
         help_help: "Print this menu.",
         clear_help: "Clear the terminal screen.",
         reboot_help: "Restart.",
-        vim: "Change the current working directory.",
-        vi: "Move (rename) files.",
-        emacs: "Remove files or directories.",
-        welcome: "Welcome!",
+        vim_help: "Change the current working directory.",
+        vi_help: "Move (rename) files.",
+        emacs_help: "Remove files or directories.",
+        welcome: "Welcome! Type 'help' to get started.",
         internet_explorer_warning: "Why are you using internet explorer? This doesn't work with IE. Get on Chrome or something.",
         invalid_command_message: "<value>: command not found.",
         permission_denied_message: "Unable to '<value>', permission denied.",
@@ -219,7 +219,7 @@ var main = (function () {
     };
 
     var cmds = {
-        THISISAWESOME: { value: "thisisawesome", help: "Pretty cool, right?" },
+        COOL: { value: "cool", help: "Pretty cool, right?" },
         LS: { value: "ls", help: configs.getInstance().ls_help },
         CAT: { value: "cat", help: configs.getInstance().cat_help },
         WHOAMI: { value: "whoami", help: configs.getInstance().whoami_help },
@@ -237,8 +237,8 @@ var main = (function () {
         // console.log("Checking ", cmdComponents[0]);
         try {
         switch (cmdComponents[0]) {
-            case cmds.THISISAWESOME.value:
-                this.thisisawesome();
+            case cmds.COOL.value:
+                this.cool();
                 break;
             case cmds.LS.value:
                 this.ls();
@@ -280,7 +280,7 @@ var main = (function () {
         }
     };
 
-    Terminal.prototype.thisisawesome = function () {
+    Terminal.prototype.cool = function () {
         this.type("I know right?", this.unlock.bind(this))
     }
 
@@ -305,7 +305,7 @@ var main = (function () {
     };
 
     Terminal.prototype.ls = function () {
-        var result = ".\n..\n" + configs.getInstance().welcome_file_name + "\n";
+        var result = ".\n..\n";
         for (var file in files.getInstance()) {
             result += file + "\n";
         }
@@ -330,8 +330,19 @@ var main = (function () {
 
     Terminal.prototype.help = function () {
         var result = configs.getInstance().general_help + "\n\n";
+        let maxPerLine = 4;
+        let counter = 0;
         for (var cmd in cmds) {
-            result += cmds[cmd].value + " - " + cmds[cmd].help + "\n";
+            result += cmds[cmd].value;
+            // If not end
+            if (counter != maxPerLine) {
+                result += "  ";
+            } else {
+                counter = 0;
+                result += "\n";
+            }
+            counter++;
+            // result += cmds[cmd].value /*+ " - " + cmds[cmd].help*/ + "\n";
         }
         this.type(result.trim(), this.unlock.bind(this));
     };
