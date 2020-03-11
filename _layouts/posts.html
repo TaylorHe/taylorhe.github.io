@@ -1,0 +1,32 @@
+---
+layout: default
+---
+<div class="posts">
+<!-- <h1>Posts</h1>
+<hr style="margin-bottom: 1em"> -->
+
+  {%- if site.posts.size > 0 -%}
+    <div style="display: flex; margin-top: 1em;">
+      <h1 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h1>
+      <span style="flex: 50%; margin-left: 5%; margin-right: 5%; margin-top: 0.65em; margin-bottom: 1em;">{% include alltags.html %}</span>
+    </div>
+    <!-- Posts -->
+    <ul class="post-list">
+      {%- for post in site.posts -%}
+      <li>
+        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+        <span class="post-meta">{{ post.date | date: date_format }}</span>
+        <h3>
+          <a class="post-link" href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+        </h3>
+        {%- if site.show_excerpts -%}
+          {{ post.excerpt }}
+        {%- endif -%}
+      </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+</div>
