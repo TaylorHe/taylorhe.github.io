@@ -41,11 +41,126 @@ They're pretty unsurprisingly straightforward:
     f2 = std::move(f1);  // move assignment
     ```
 
-So now that I've written it out, I'm thinking: 6 implicit methods? C++ basically writes itself! Thanks, Mr. Compiler!
+So now that I've written it out, I'm thinking: 6 implicit methods? C++ basically writes itself!
 Also in practice, I find that I don't really touch copy/copy assign/move/move assign often. Most of the time the implicit ones are good enough. Thanks, Mr. Compiler!
 
 ### Derived Classes
 Have you had some time to think about the question about why destructors are implicitly virtual?
 Destructors are virtual because it ensures that the destructor of a derived class will be called.
 
-Derived classes are ... [To be continued]
+Derived classes are just classes that inherit from the base class. Using the classic Animal example,
+```cpp
+// Base class Animal
+class Animal {
+public:
+    Animal() {
+      std::cout << "Constructing Animal\n";
+    };
+    // virtual ~Animal() {
+    ~Animal() {
+      std::cout << "Destructing Animal\n";
+    };
+};
+
+// Derived class Dog
+class Dog: public Animal {
+public:
+    Dog() {
+      std::cout << "Constructing Dog\n";
+    };
+    ~Dog() {
+        std::cout << "Destructing Dog\n";
+    };
+};
+
+int main() {
+    Animal* a = new Dog();
+    delete a;
+}
+```
+The output of this program will be:
+```
+Constructing Animal
+Constructing Dog
+Destructing Animal
+```
+The derived class is not destructed when deleting `a`.
+If we qualify `Animal`'s destructor with the `virtual` keyword, then `Dog` will destruct before the `Animal` destructor is called.
+
+
+### Multiple Inheritance
+Derived classes can have multiple parents. The syntax is just to separate the base classes with commas.
+The order in which the base classes appear dictate the order of the constructors.
+```cpp
+class Base1 { }
+class Base2 { }
+class Derived : public Base1, public Base2 { }
+```
+
+The derived class inherits the Base classes' public members.
+```cpp
+// Base class Animal
+class Animal {
+public:
+    void makeSound() {
+        std::cout << "I am an animal\n";
+    }
+};
+class FourLeggedCreature {
+public:
+    // void makeSound() {
+    //   std::cout << "I have four legs\n";
+    // }
+};
+// Derived class Dog
+class Dog: public FourLeggedCreature, public Animal {
+public:
+    void makeSounds() {
+        this->makeSound();
+    }
+};
+
+int main() {
+    Dog d;
+    d.makeSounds();  // "I am an animal"
+}
+```
+In this example, it's very easy to see the output of the program when `d.makeSounds()` is called, because there's only one definition of `makeSound()`.
+
+What if `FourLeggedCreature` also had a `makeSound()` method? More generically, what happens when there's a method name clash in the base classes?
+
+If you have the exact code above and uncomment `FourLeggedCreature::makeSound()`, the program won't compile with error:
+```
+error: member 'makeSound' found in multiple base classes of different types
+```
+
+However, if you take out the last line `d.makeSounds();`, the program will compile with the duplicate method name, since nothing is using it.
+
+Calling `makeSound()` in both base classes is possible, but I don't think it's very pretty. Honestly if you really want to do that, I would rethink the inheritance structure or rename the functions first. If you really can't, then the solution I would take is to wrap `makeSound()` in forwarding functions for each base class that implements it, so that theres no ambiguity.
+
+### Friends
+Every C++ professor I've come across has made the inappropriate joke at least once - that friends have access to each other's privates.
+
+```cpp
+class A {
+public:
+    int x;
+protected:
+    int y;
+private:
+    int z;
+
+friend class B;
+};
+
+class B {
+    B(const A& a) {
+        std::cout << a.x << " " << a.y << " " << a.z;
+    }
+}
+```
+In this case, because `B` is declared a friend of `A`, it's possible to access both private and protected members of `A`.
+
+I actually don't think I know any more about friend classes other than this...
+
+In practice, the most common use case for me is for unit tests: to declare my mock classes/gtest classes as a friend.
