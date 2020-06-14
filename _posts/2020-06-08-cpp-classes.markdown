@@ -6,7 +6,7 @@ excerpt: Always great to have a refresher, so this post is going back to the bas
 tags: c++
 ---
 
-At first, this was going to be a quick and easy post about virtual functions, but the more I thought about it, why not cover the fundamentals of cpp classes while I'm at it? This isn't going to go too in depth, but just provide some nice-to-know knowledge. I kind of have this info jumbled in my head, so it's good to structure and have some me-documentation for it instead of having to read through some overly complex StackOverflow answer.
+At first, this was going to be a quick and easy post about why destructors are implicitly virtual, but the more I thought about it, why not cover what I know about cpp classes while I'm at it? This isn't going to go too in depth, but just provide some nice-to-know knowledge. I kind of have this info jumbled in my head, so it's good to structure and have some me-documentation for it instead of having to read through some overly complex StackOverflow answer.
 <hr /> <br />
 ### Thanks, Mr. Compiler.
 ```cpp
