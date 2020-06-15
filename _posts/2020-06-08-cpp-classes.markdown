@@ -2,7 +2,7 @@
 layout: post
 title:  C++ Classes
 date:   2020-06-08 03:00:00 -0500
-excerpt: Always great to have a refresher, so this post is going back to the basics!
+excerpt: Random facts about C++ classes.
 tags: c++
 ---
 

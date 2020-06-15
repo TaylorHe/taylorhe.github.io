@@ -1,11 +1,59 @@
 ---
 layout: post
-title:  C++ Function Qualifiers
-date:   2020-06-15 03:00:00 -0500
-excerpt: A collection of stuff about C++ functions.
+title:  C++ Functions
+date:   2020-06-22 03:00:00 -0500
+excerpt: A collection of stuff about C++ function qualifiers.
 tags: c++
 ---
 If I'm going to write a post about C++ classes, why not functions too?
+
+### const
+Probably the most popular of the function qualifiers, `const` can appear in many places in a function definition. For example,
+```cpp
+class Foo {
+public:
+    const std::string& function(const int& input) const;
+}
+```
+The first and second `const` just qualify the types that come immediately after them.
+The third `const` is the function qualifier - it means that the function cannot modify the object or any member variables.
+
+### virtual
+Virtual is also pretty popular. `virtual` is declared in a base class and then must be re-defined by a derived class. Formally, `virtual` functions are used to achieve runtime polymorphism (dynamic dispatch), which is just a fancy way of saying that the function that is called at runtime is also decided at runtime.
+```cpp
+class Foo {
+    virtual void function() {
+        std::cout << "implemented" << std::endl;
+    }
+}
+```
+Some rules apply:
+
+ - Virtual functions can't be static or a friend function
+ - They are always defined in the base class. If a derived class does not override the function, the base class implementation is used.
+
+Two rules, and I actually lied about one of them. Virtual functions actually don't have to be defined in the base class when a it is a pure virtual function.
+Pure virtual functions are defined by the `= 0` suffix. These functions *must* be implemented in the derived class.
+```cpp
+class Foo {
+    virtual void function() = 0;
+}
+class Bar {
+    void funtion() {
+        std::cout << "implemented" << std::endl;
+    }
+}
+```
+Pure virtual functions also change the `Class` in which they are defined. 
+
+In the example above, `Foo` is now an abtract class, or an interface, which means that it cannot be used to instantiate objects.
+```cpp
+int main() {
+    Foo foo;
+}
+```
+This program would not compile, since foo is an abstract class.
+
 ### inline
 `inline` is a pretty popular function qualifier.
 
