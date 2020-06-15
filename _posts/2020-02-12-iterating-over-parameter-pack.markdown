@@ -155,4 +155,4 @@ const auto& [id, code] = myMap.find(3);
 std::cout << id << ": " << code << std::endl;
 {% endhighlight %}
 
-Would you look at that, C++17 has structured bindings like other high level languages. This makes it much more clear and readable. Please give me C++17.
+C++17 has structured bindings like other high level languages, which makes code much more clear and readable.
