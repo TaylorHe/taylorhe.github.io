@@ -2,7 +2,7 @@
 layout: post
 title:  C++ Attributes
 date:   2020-07-06 03:00:00 -0500
-excerpt: [[nodiscard]] const Information& postAboutAttributes();
+excerpt: '[[nodiscard]] const Information& postAboutAttributes();'
 tags: c++
 ---
 I was actually going to include this in the function qualifiers post, but it didn't exactly fit with the rest of the real qualifiers. I'm not exactly sure how to group them yet, and they're not only for functions, so I'm making a separate post for them.
