@@ -38,7 +38,7 @@ Pure virtual functions are defined by the `= 0` suffix. These functions *must* b
 class Foo {
     virtual void function() = 0;
 }
-class Bar {
+class Bar : public Foo {
     void funtion() {
         std::cout << "implemented" << std::endl;
     }
