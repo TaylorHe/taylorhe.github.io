@@ -69,10 +69,12 @@ int main() {
 }
 ```
 When the program executes, it:
-    1. Calls the `max()` function
-    2. Pushes `a` and `b` on to the stack
-    3. Pops `a` and `b` off of the stack
-    4. Returns the value
+
+1. Calls the `max()` function
+2. Pushes `a` and `b` on to the stack
+3. Pops `a` and `b` off of the stack
+4. Returns the value
+
 Doesn't seem like much, but there is some overhead associated with calling the function, pushing/popping variables on the stack, and the return overhead.
 If we qualify max with `inline`, the code is replaced with the contents of the inline function at compile time.
 
