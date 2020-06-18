@@ -8,5 +8,3 @@ subheading: This is the place where I try to organize my thoughts into something
 ---
 <h1> {{ page.heading }} </h1>
 <h3> Hi, I'm Taylor! <br /> {{ page.subheading }} </h3>
-
-If you wanna hire me or something, check out <a target="_blank" href="/assets/resume_01MAR2020.pdf">my resume</a>.

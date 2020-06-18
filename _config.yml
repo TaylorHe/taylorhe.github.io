@@ -33,6 +33,9 @@ header_pages:
 
 # Featured Post
 featured_post: perfect-forwarding
+
+future: false
+
 # Social
 # twitter_username: 
 github_username:  taylorhe
