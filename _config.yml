@@ -34,7 +34,7 @@ header_pages:
 # Featured Post
 featured_post: perfect-forwarding
 
-future: false
+# future: false
 
 # Social
 # twitter_username: 
