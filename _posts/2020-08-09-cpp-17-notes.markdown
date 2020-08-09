@@ -1,0 +1,310 @@
+---
+layout: post
+title:  C++17 Notes
+date:   2020-08-09 03:00:00 -0500
+excerpt: Namespace nesting, attributes, and if constexpr!
+tags: c++
+---
+
+My [rushed] notes from an amazing C++ talk by my company's cpp guild.
+
+There's a lot in here, and I probably won't use some of the features too often. So far, I think I'd take advantage of:
+
+ - Structured binding! Although it's not as nice as Javascript's structured binding, I think this is a big step in QoL enhancements for C++.
+ - initializers in `if`/`switch`, I've already used it a few times, it's really handy
+ - `if constexpr`, very nice for template programming
+ - `[[nodiscard]]` attribute for API wrapper functions
+
+
+
+### Namespace nesting
+```cpp
+// Pre C++17
+A {
+    B { }
+}
+// In C++17, you can write
+A::B { }
+```
+
+### \_v suffix
+```cpp
+// Pre C++17
+static_assert(std::is_floating_point<T>::value, "error");
+// In C++17, you can write
+static_assert(std::is_floating_point_v<T>); // no error required
+```
+
+
+### Auto deduction
+```cpp
+auto a = 0  // int
+auto b(0)   // int
+auto c{0}   // pre17 deduced to int; cpp 17 uses initializer list
+auto d = {0} // init list
+auto e{0,1} // pre17 used to be list, cpp17 now compilation error
+```
+### Adding attributes on namespaces/enums
+```cpp
+namespace A {
+    namespace [[deprecated("this is dep")]] deprec {
+        // Foo
+    }
+}
+
+enum class GoodLanguages {
+    e_PYTHON,
+    e_JAVASCRIPT [[deprecated("eww")]],
+    e_CPP,
+    e_RUST
+}
+```
+
+### init-statements in conditionals
+Also works with switch statements
+```cpp
+// Pre 17, you only had a scoping block.
+{  // scope block
+    const int rc = init();
+    if (rc == 0) {
+        std::cout << "rc visible outside of if block";
+    }
+}
+
+// In C++17:
+if (const int rc = init(); rc == 0) {
+    std::cout << "rc visible only in if block"
+}
+```
+
+### auto non-type template params
+A non-type parameter is defined as a type of parameter that doesn't substitute for a type, but rather a value. Some common non-type params are:
+    - Enums and integral values
+    - pointer/reference to a class obj/function
+
+Pre C++17, you would have to pass in the class name with a non-type parameter.
+```cpp
+template <typename T, T ENUM_VALUE>
+constexpr const char* enumToString();
+constexpr auto s = enumToString<Dog, Dog::e_BARK>();
+```
+First have to take the type in the first param, then enum for second param. Increases verbosity.
+```cpp
+// More pre c++17 examples, integral types have no type
+std::integral_constant<int, 42>{};
+std::integral_constant<long, 1204l>{};
+```
+
+In C++17, auto can be used to deduce the non-type param:
+```cpp
+template <auto ENUM_VALUE>  // no longer needs a T
+constexpre const char* enumToString();
+constexpr auto s = enumToString<Dog::e_BARK>();
+
+template <auto VALUE> struct Constant {};
+Constant<42> {};  // decltype is int
+Constant<'a'> {}; // decltype is char
+Constant<50ul>{}; // decltype is unsigned long
+```
+### std::string_view
+In C++17, `std::string_view`: ref to a string, does not own contents.
+
+### [[nodiscard]] attribute
+Let's say we have some function:
+```cpp
+int httpGetRequest(std::string* output);
+```
+Generally, we use this function as such:
+```cpp
+std::string output;
+httpGetRequest(&output);
+foo(output); // might error!
+```
+The problem with this is that you dont know if `output` is populated, so you must check the `int` return value. However, this is not enforced anywhere, the programmer just has to know to check the return value.
+
+With C++17, we can enforce checking return types with `[[nodiscard]]`. The nodiscard attribute means to always check the return value, and the return value is not checked, the program compiles with a warning (not an error).
+```cpp
+[[nodiscard] int httpGetRequest(std::string* output);
+// Compiler warning tells you to do this
+std::string output;
+int rc = httpGetRequest(&output); // check rc
+if (rc == e_ERROR) {
+    // handle err
+}
+foo(output);
+```
+
+### [[fallthrough]] attribute
+```cpp
+switch (requestStatus)
+{
+    case RequestStatus::e_VALID:
+        handleRequest(sender, request);
+        // BUG: no break here! this statement will fallthrough
+    case RequestStatus::e_TIMEOUT:
+        sendTimeoutResponse(sender);
+        break;
+    // Use fallthrough or break for every case
+    case RequestStatus::e_FOO:
+        [[fallthrough]]
+    case RequestStatus::e_BAR:
+        handleFooAndBar()
+        break;
+}
+```
+Always end switch cases with `break;` or `[[fallthrough]]`
+
+### std::optional
+I think this existed in `boost::optional` already
+
+```cpp
+std::optional<int> random("file") {
+    return randomNumberIn("file") ? 42 : std::nullopt;
+}
+```
+`random` returns either `std::nullopt` or `int`.
+
+### value_or with std::optional
+This could be really handy. Right now I sometimes use dummy values like -1 or empty string to represent an invalid case, but with `optional` and `value_or` I no longer have to.
+
+In C++17, we can write:
+```cpp
+void greet(std::optional<std::string> const& name ) {
+    std::cout << "Hello" << name.value_or("<name missing>") << std::endl;
+}
+```
+### std::variant
+I already have an entire post about `std::variant`, so I'll keep it short.
+```cpp
+using MarketEvent = std::variant<Order, Execution, Price>;
+void processMarketEvent(const MarketEvent& e) {
+    match(e, [](const Order&) {/* processs Order */},
+             [](const Execution&) {/* processs Execution */},
+             [](const Price&) {/* processs Price */},
+    )
+}
+```
+
+optional and variant is used for:
+
+- representing failure cases or multiple outcomes
+- modelling optional data
+- controlling construction/destruction
+- representing choice between types
+- typesafe error handling
+- state machines
+- recursive data structures (JSON)
+
+
+### Structured Binding!!
+Probably the most useful feature in this whole release.
+```cpp
+std::unordered_map<std::string, std::string> emails;
+emails.emplace("Taylor", "the64@bloomberg.net");
+// C++17's structured binding allows you to write
+// this nice for loop
+for (const auto& [name, email]: emails) {
+    std::cout << name << " [" << emails << "]\n";
+}
+```
+Can destruct anything, as long as its public. Structs, tuples, etc. 
+```cpp
+struct vec3 { double x, y, z };
+const auto [px, py, pz] = pos;
+```
+Customizing this is possible as well, but requires some work.
+
+Just my own thoughts, but maybe in the future it can smartly destructure by key name in an unordered_map or something, similar to javascript where you can write
+```javascript
+const data = {
+    foo: 30
+};
+const { foo } = data;
+console.log(foo); // prints "30"
+```
+
+### if constexpr
+Pre C++17, when you build a template, you write can use `enable_if` for type cases that overload the templates. It's basically a compile-time switch for templates, but in my opinion it's pretty hard to use. You'd probably have to write some convoluted metaprogramming statement that is hard to read. An example is something like:
+```cpp
+template <class T>
+typename std::enable_if<std::is_arithmetic<T>, bool>::type
+foo(T x)
+{
+    // implementation
+}
+// or even worse, 
+template <bool B, typename T = void>
+using enable_if_t = typename enable_if<B, T>::type;
+template <class T,
+         typename std::enable_if_t<std::is_integral<T>::value>* = nullptr>
+void do_stuff(T& t) {
+    // an implementation for integral types (int, char, unsigned, etc.)
+}
+
+```
+
+With `if constexpr` you can write simply:
+```cpp
+// using _v suffix
+template <typename T>
+auto get_value(T t) {
+    if constexpr (std::is_pointer_v<T>) {
+        return *t;
+    } else {
+        return t;
+    }
+}
+```
+Another great example is:
+```cpp
+struct S 
+{
+    int n;
+    std::string s;
+    float d;
+};
+
+// Pre c++17, you'd have to write
+template <> auto& get<0>(S &s) { return s.n; }
+template <> auto& get<1>(S &s) { return s.s; }
+template <> auto& get<2>(S &s) { return s.d; }
+
+// Now, it can all be matched in the same function.
+template <std::size_t N>
+auto& get(S& s)
+{
+    if constexpr (N == 0)
+        return s.n;
+    else if constexpr (N == 1)
+        return s.s;
+    else if constexpr (N == 2)
+        return s.d;
+}
+```
+
+For fun, let's say we want to write a naive fibonacci solution that finds the solution at compile time. We can write:
+```cpp
+// Pre 17, we'd have to write multiple templates
+template<long N>
+constexpr int fibonacci() {
+    return fibonacci<N-1>() + fibonacci<N-2>();
+} 
+template<>
+constexpr int fibonacci_old<1>() { return 1; }
+template<>
+constexpr int fibonacci_old<0>() { return 0; }
+
+
+// Now, the three functions can be packaged into one familiar function
+template<long N>
+constexpr long fibonacci()
+{
+    if constexpr (N>=2)
+        return fibonacci<N-1>() + fibonacci<N-2>();
+    else
+        return N;
+}
+int main() {
+    std::cout << fibonacci<20>();
+}
+```
