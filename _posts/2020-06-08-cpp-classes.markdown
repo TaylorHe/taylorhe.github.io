@@ -6,7 +6,7 @@ excerpt: Random facts about C++ classes.
 tags: c++
 ---
 
-At first, this was going to be a quick and easy post about why destructors are implicitly virtual, but the more I thought about it, why not cover what I know about cpp classes while I'm at it? This isn't going to go too in depth, but just provide some nice-to-know knowledge. I kind of have this info jumbled in my head, so it's good to structure and have some me-documentation for it instead of having to read through some overly complex StackOverflow answer.
+At first, this was going to be a quick and easy post about destructors, but the more I thought about it, why not cover what I know about cpp classes while I'm at it? This isn't going to go too in depth, but just provide some nice-to-know knowledge. I kind of have this info jumbled in my head, so it's good to structure and have some me-documentation for it instead of having to read through some overly complex StackOverflow answer.
 <hr /> <br />
 ### Thanks, Mr. Compiler.
 ```cpp
@@ -17,7 +17,7 @@ When you write the most basic definition of a class, like above, it looks like i
 They're pretty unsurprisingly straightforward:
  - A default constructor: This default constructor has no arguments and no body.
     It's so you can write `Foo foo;` without writing your own constructor.
- - A destructor: This is implicitly marked `virtual`. Can you guess why?
+ - A destructor: to free memory
  - A copy constructor: So that you can copy one instance to another. Just copies each member of the first instance to the second.
     ```cpp
     Foo f1;
@@ -45,8 +45,7 @@ So now that I've written it out, I'm thinking: 6 implicit methods? C++ basically
 Also in practice, I find that I don't really touch copy/copy assign/move/move assign often. Most of the time the implicit ones are good enough. Thanks, Mr. Compiler!
 
 ### Derived Classes
-Have you had some time to think about the question about why destructors are implicitly virtual?
-Destructors are virtual because it ensures that the destructor of a derived class will be called.
+Destructors are generally implemented with virtual because it ensures that the destructor of a derived class will be called.
 
 Derived classes are just classes that inherit from the base class. Using the classic Animal example,
 ```cpp
