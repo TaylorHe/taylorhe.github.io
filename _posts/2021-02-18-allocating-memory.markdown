@@ -38,7 +38,7 @@ The system call to move the program break is `brk()`.
 
 - `sbrk(intptr_t increment)` is similar, except that it increases the program break by an amount. This function is just a wrapper around the `brk()` call. The man pages also specify that sbrk is a library function that uses the brk syscall, as opposed to being a syscall itself.
 
-<img src="/assets/img/sbrk-example.png" />
+<img src="/assets/img/sbrk_example.png" />
 
 According to its [man pages](https://man7.org/linux/man-pages/man2/brk.2.html), `brk()` is considered legacy. It was removed from the POSIX 2001 standard, and you shouldn't ever manually use it.
 
@@ -76,7 +76,7 @@ mmap also does not use the physical heap space. It creates a block in the virtua
 
 When I test on my (ubuntu on windows) system and on online repls, I see that `M_MMAP_THRESHOLD == -3`, and it never moves the program break at all. I'm guessing each system is implementation dependent, whether they use 128K or not.
 
-<img src="/assets/img/mmap-example.png" />
+<img src="/assets/img/mmap_example.png" />
 
 ## Conclusion
 This isn't an exhaustive post, obviously. 
