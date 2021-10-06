@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Allocating Memory
+title:  Allocation Memory
 date:   2021-02-18 03:00:00 -0500
 excerpt: What kind of software engineer really works with this stuff, anyway?
 tags: c++ memory linux
@@ -15,7 +15,7 @@ Apparently, that wasn't good enough.
 
 "Ok, that's true - but what does it _actually_ do?" he pushed. "Behind the scenes, how does it allocate memory?"
 
-I felt that the question was a little unfair. Besides the low-level trivia, how `new` allocates memory is most likely implementation dependent. As far as I knew, `new` used `malloc`, and then called the constructor of the provided type.
+I felt that the question was a little unfair. Besides the low-level trivia, how `new` allocates memory is most likely implementation dependent. As far as I knew, `new` allocated memory, probably using `malloc`, and then called the constructor of the provided type.
 
 Still, I was determined to find out what the answer. Armed with time and internet resources, I decided to document my findings here.
 
@@ -40,7 +40,7 @@ The system call to move the program break is `brk()`.
 
 <img src="/assets/img/sbrk_example.png" />
 
-According to its [man pages](https://man7.org/linux/man-pages/man2/brk.2.html), `brk()` is considered legacy. It was removed from the POSIX 2001 standard, and you shouldn't ever manually use it.
+According to its [man pages](https://man7.org/linux/man-pages/man2/brk.2.html), using `brk()` directly is considered legacy. It was removed from the POSIX 2001 standard, and you shouldn't ever manually use it.
 
 I can't find much reason on why `brk` is legacy online, but I can take my guesses:
 
@@ -53,7 +53,7 @@ I can't find much reason on why `brk` is legacy online, but I can take my guesse
     This is kind of a guess, but I could imagine two threads reading the program break at the same time, and then allocating memory with that starting address. It would mean that both threads would write to the same chunk of memory, and may delete a portion of the larger allocation.
 
 ## malloc
-Typical implementations of malloc use `brk` to allocate smaller amounts of memory, and `mmap` for large allocations. We'll discuss `mmap` next.
+Some implementations of malloc use `brk` to allocate smaller amounts of memory, and `mmap` for large allocations. We'll discuss `mmap` next.
 
 malloc is typically faster than brk because it acts as a wrapper around brk, by aggregating small memory requests to fewer, larger brk syscalls.
 
@@ -68,15 +68,21 @@ Malloc also implements a free list, which is just a circular linked list of bloc
 ## mmap
 `mmap` is the generally accepted better choice compared to `brk()`. It allocates memory in pages, and the allocated memory blocks can always be independently freed back, as opposed to the program break solution with brk.
 
+```cpp
+void* mmap(void* start, size_t length, int prot, int flags, int fd, off_t offset)
+``` 
+
 malloc uses mmap for large allocations of memory, namely, the size is defined by `M_MMAP_THRESHOLD`. The default size is 128K.
 
 This size is typically much larger than the page size, since mmap allocations must be page-aligned. If mmap tries to allocate something smaller, there will be wasted memory in the last page.
 
-mmap also does not use the physical heap space. It creates a block in the virtual address space, of which the starting address and length/size are supplied. You can supply a NULL address, which means that the kernel chooses the memory address to create the mapping - page aligned, of course. If the supplied address is not page aligned, then the kernel will use a nearby page boundary above/equal to the value.
+mmap creates a block in the virtual address space, of which the starting address and length/size are supplied. You can supply a NULL address, which means that the kernel chooses the memory address to create the mapping - page aligned, of course. If the supplied address is not page aligned, then the kernel will use a nearby page boundary above/equal to the value.
 
 When I test on my (ubuntu on windows) system and on online repls, I see that `M_MMAP_THRESHOLD == -3`, and it never moves the program break at all. I'm guessing each system is implementation dependent, whether they use 128K or not.
 
 <img src="/assets/img/mmap_example.png" />
+
+
 
 ## Conclusion
 This isn't an exhaustive post, obviously. 
