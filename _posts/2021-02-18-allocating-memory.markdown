@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Allocation Memory
+title:  Allocating Memory
 date:   2021-02-18 03:00:00 -0500
 excerpt: What kind of software engineer really works with this stuff, anyway?
 tags: c++ memory linux
