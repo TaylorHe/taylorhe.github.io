@@ -66,7 +66,8 @@ This usage is very similar to an async-await pattern, allowing for cooperative m
 Fibers also can be run and scheduled across multiple threads, known as an M:N threading model. The downside is that because fibers are user-scheduled, it increases complexity and potentially suboptimal scheduling with a poor implementation.
 
 ## Coroutines
-Coroutines are just functions that can be suspended and resumed. If you've ever created a python generator, it's like that.
+Fibers are great, but effectively what we try to achieve from it is some asynchronous model of suspending and resuming execution.
+C++20 introduces coroutines into the standard library which does the same thing, natively. Simply, coroutines are just functions that can be suspended and resumed. If you've ever created a python generator, it's like that. My guess is that coroutines, when released, will probably replace most fiber usage.
 
 On a conceptual level, coroutines separate the idea of execution and state; they can suspend execution while maintaining state. Coroutines can have multiple execution states, but does not own any thread of exection.
 
@@ -90,3 +91,8 @@ std::future<std::string> DoThingsInOrder(std::string input)
 
 ```
 
+## Usage and Drawbacks
+There are some drawbacks. Since fibers and coroutines run on a single thread, it's difficult to step through code linearly on GDB or any other debugger.
+One other drawback, which isn't so much technical as it is a consideration, is that the concept of coroutines is new and unfamiliar. There is a high time cost for a developer to learn about this and implement it effectively. For every I/O contribution to the codebase, developers need to think about performance, concepts and syntax of the new design, how they schedule the asynchronous call, and when to await it.
+
+However, when done properly, we can leverage all of these concepts to massively increase the processing throughput of a service. Going from a single-threaded system to a one that uses a thread pool is a large performance increase. Taking it one step further to introduce asynchronicity within a single thread via fibers or coroutines is another way of trying to squeeze all the juice of the orange - ideally when dealing with large throughput, very little time is ever being wasted on any one thread of execution.
