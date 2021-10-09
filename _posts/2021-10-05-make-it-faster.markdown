@@ -19,7 +19,7 @@ But when's the last time you or any software engineer you know had to write a fi
 
 Many times at work, I am not constrained by these 2^n or n^3 algorithms, but rather by slow requests to other services. Making a call on the network is extremely expensive - constructing and serializing the request over the network, machine routing, database queries, data filtering, and processing responses into something usable.
 
-Say all this takes 10ms, a reasonable time for a single request to fetch complex data. But maybe you have to collect data for 50 fields on the one item you're processing. Each field requires a separate request. A back of the napkin calculation of 10ms * 50 gives you an extremely slow 0.5 seconds to retrieve data with synchronous requests. Doing this for every item in a list of thousands can easily take minutes to process. All of a sudden, making a dynamic programming approach to one small problem barely makes a dent in your total processing time.
+Say a request takes an average of 10ms, a reasonable time for a single request to fetch complex data. But maybe you have to collect data for 50 fields on the one item you're processing. Each field requires a separate request. A back of the napkin calculation of 10ms * 50 gives you an extremely slow 0.5 seconds to retrieve data with synchronous requests. Doing this for every item in a list of thousands can easily take minutes to process. All of a sudden, making a dynamic programming approach to one small problem barely makes a dent in your total processing time.
 
 How do we solve these throughput slowness issues?
 
@@ -66,10 +66,10 @@ This usage is very similar to an async-await pattern, allowing for cooperative m
 Fibers also can be run and scheduled across multiple threads, known as an M:N threading model. The downside is that because fibers are user-scheduled, it increases complexity and potentially suboptimal scheduling with a poor implementation.
 
 ## Coroutines
-Fibers are great, but effectively what we try to achieve from it is some asynchronous model of suspending and resuming execution.
+Fibers are great, but effectively what we try to achieve from it is some asynchronous model of suspending and resuming execution with the least resource usage possible.
 C++20 introduces coroutines into the standard library which does the same thing, natively. Simply, coroutines are just functions that can be suspended and resumed. If you've ever created a python generator, it's like that. My guess is that coroutines, when released, will probably replace most fiber usage.
 
-On a conceptual level, coroutines separate the idea of execution and state; they can suspend execution while maintaining state. Coroutines can have multiple execution states, but does not own any thread of exection.
+On a conceptual level, coroutines separate the idea of execution and state; they can suspend execution while still maintaining state. Coroutines can have multiple execution states, but does not own any thread of exection.
 
 `co_yield` in C++20, or `yield` in python, essentially suspends the function's execution, but still stores the state.
 It then returns the value of whatever `yield` produced.
@@ -95,4 +95,6 @@ std::future<std::string> DoThingsInOrder(std::string input)
 There are some drawbacks. Since fibers and coroutines run on a single thread, it's difficult to step through code linearly on GDB or any other debugger.
 One other drawback, which isn't so much technical as it is a consideration, is that the concept of coroutines is new and unfamiliar. There is a high time cost for a developer to learn about this and implement it effectively. For every I/O contribution to the codebase, developers need to think about performance, concepts and syntax of the new design, how they schedule the asynchronous call, and when to await it.
 
-However, when done properly, we can leverage all of these concepts to massively increase the processing throughput of a service. Going from a single-threaded system to a one that uses a thread pool is a large performance increase. Taking it one step further to introduce asynchronicity within a single thread via fibers or coroutines is another way of trying to squeeze all the juice of the orange - ideally when dealing with large throughput, very little time is ever being wasted on any one thread of execution.
+However, when done properly, we can leverage all of these concepts to massively increase the processing throughput of a service. Caching requests can improve processing time, and going from a single-threaded system to a one that uses a thread pool is a large performance increase. Taking it one step further to introduce asynchronicity within a single thread via fibers or coroutines is another way of trying to squeeze all the juice of the orange - ideally when dealing with large throughput, very little time is ever being wasted on any one thread of execution. 
+
+When implementing threads, fibers, and coroutines, the performance increase is impossible to measure without knowing the details of how data is processed in the system. In the best case from the example earlier, if all 50 requests do not depend on each other, then the theoretical processing time is the time it takes for the longest request, plus a bit of context switching overhead.
