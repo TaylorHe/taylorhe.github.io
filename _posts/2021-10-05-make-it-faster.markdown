@@ -7,9 +7,7 @@ tags: c++
 ---
 
 ## Background
-Thinking about performance has been extremely important at work. It's engrained in all the feature enhancements and bug fixes that go into the codebase.
-
-Below is a simple problem statement my team faces, and some potential solutions we've thought about and attempted.
+Thinking about performance has been extremely important. It's engrained in all the feature enhancements and bug fixes that go into a codebase.
 
 
 ## Need for Speed
@@ -17,7 +15,7 @@ In college, we are taught a set of neat algorithms to solve a very specific, iso
 
 But when's the last time you or any software engineer you know had to write a fibonacci function?
 
-Many times at work, I am not constrained by these 2^n or n^3 algorithms - because I rarely see them - but rather by slow requests to other services. Making a call on the network is extremely expensive - constructing and serializing the request over the network, machine routing, database queries, data filtering, and processing responses into something usable.
+Many times at work, I am not constrained by these 2^n or n^3 algorithms - because I rarely/never see them - but rather by slow requests to other services. Making a call on the network is extremely expensive - constructing and serializing the request over the network, machine routing, database queries, data filtering, and processing responses into something usable.
 
 Say a request takes an average of 10ms, a reasonable time for a single request to fetch complex data. But maybe you have to collect data for 50 fields on the one item you're processing. Each field requires a separate request. A back of the napkin calculation of 10ms * 50 gives you an extremely slow 0.5 seconds to retrieve data with synchronous requests. Doing this for every item in a list of thousands can easily take minutes to process.
 
@@ -47,7 +45,7 @@ The obvious way to make things faster is to run them at the same time. Threading
 
 On that note, context switching between threads is, ahem, relatively higher, but still very fast. On a typical x86, a context switch costs thousands of CPU cycles when entering and exiting kernel mode to call the scheduler. Still, very fast, but compared to some other methods below, it is an order of magnitude slower. 
 
-Threading can substantially improve our runtime, but at a cost. Each thread takes up a bit of stack space for its own variables, and takes up a thread ID. There are a limited number of threads that can be spawned on a server. In fact, in a previous job, the first pass of implementing threading had issues with resource management - we were warned by the machine managers that our N number of service instances was collectively spawning over 10,000 threads when we recieved a huge number of requests. The machine maximum was something like 65k, and it was unfair that one process was hogging so much resource of both threads and the RAM associated with spawning threads. In addition to resource control, this practice is undesirable because you'd have to manage the lifetime of the threads, paying the cost of constructing and destroying the thread, context switching, etc.
+Threading can substantially improve our runtime, but at a cost. Each thread takes up a bit of stack space for its own variables, and takes up a thread ID. There are a limited number of threads that can be spawned on a server. In fact, in a proof of concept project, my initial implementation of a service had issues with resource management - I was warned by the machine managers that my N number of service instances was collectively spawning an insane number of threads when we recieved a huge number of requests. The machine maximum was something like 65k, and it was unfair that those processes were hogging so much resource of both threads and the RAM associated with spawning threads. In addition to resource control, my terrible implementation poorly managed the lifetime of the threads, with relatively high costs of constructing and destroying the thread, context switching, etc.
 
 ## Thread Pools
 A common paradigm to allocate a thread pool. A thread pool is a simple concept: let's try limiting the number of threads, and each piece of work is placed on a queue to be processed. A request is put on a queue, and the thread pool pulls from that queue. If a thread is available, then great, the thread pool assigns a thread to process that task, and when finished, we give the thread back to the pool for the next task.
@@ -90,7 +88,7 @@ std::future<std::string> DoThingsInOrder(std::string input)
 }
 ```
 
-There are some drawbacks. Since fibers and coroutines run on a single thread, it's difficult to step through code linearly on GDB or any other debugger.
+There are some drawbacks. Since fibers and coroutines run on a single thread, it might be difficult to step through code linearly on GDB or any other debugger.
 One other drawback, which isn't so much technical as it is a consideration, is that the concept of coroutines is new and unfamiliar. There is a high time cost for a developer to learn about this and implement it effectively. For every I/O contribution to the codebase, developers need to think about performance, concepts and syntax of the new design, how they schedule the asynchronous call, and when to await it.
 
 
