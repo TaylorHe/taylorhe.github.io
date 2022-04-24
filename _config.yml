@@ -32,8 +32,7 @@ header_pages:
   - about.markdown
 
 # Featured Post
-# featured_post: perfect-forwarding
-
+featured_post: data-pipelines
 # future: false
 
 # Social
