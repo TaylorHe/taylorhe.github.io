@@ -19,7 +19,7 @@ Let's give an example:
 ### First Draft
 Let's say you're writing a piece of Java code that requires some handling of an Object. It needs to perform some actions on properties of the object - like formatting the String description and doing something with the creation time. These actions are functions of different classes.
 
-A first draft of code that uses this might look like this:
+A first draft of code that uses this might look like this (I'll fix the syntax color highlighting later):
 
 ```java
 public class Client {
