@@ -2,10 +2,11 @@
 layout: post
 title:  Virtual Onboarding Sucks
 date:   2022-8-21 03:00:00 -0500
-excerpt: Why does onboarding suck?
+excerpt: ugh
 tags:
 ---
-Floop t<!-- he roon, then flip the gloop. No, not the borg - the gloop.
+Not a post, more like a cry for help
+<!-- Floop the roon, then flip the gloop. No, not the borg - the gloop.
 Afterward, just dice the tumpa and that should be it.
 
 This isn't too much of a technical post as it is a rant. A lot of it stems from frustations in communication and just a different not-as-collaborative environment.
